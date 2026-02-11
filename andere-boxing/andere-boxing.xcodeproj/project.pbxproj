@@ -1,0 +1,1004 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		53FFCEDD2F3CC29D00023103 /* andere-boxing Watch App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 53FFCEDC2F3CC29D00023103 /* andere-boxing Watch App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		53FFCEC72F3CC29D00023103 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53FFCEB12F3CC29C00023103 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53FFCEB82F3CC29C00023103;
+			remoteInfo = "andere-boxing";
+		};
+		53FFCED12F3CC29D00023103 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53FFCEB12F3CC29C00023103 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53FFCEB82F3CC29C00023103;
+			remoteInfo = "andere-boxing";
+		};
+		53FFCEDE2F3CC29D00023103 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53FFCEB12F3CC29C00023103 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53FFCEDB2F3CC29D00023103;
+			remoteInfo = "andere-boxing Watch App";
+		};
+		53FFCEEC2F3CC29D00023103 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53FFCEB12F3CC29C00023103 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53FFCEDB2F3CC29D00023103;
+			remoteInfo = "andere-boxing Watch App";
+		};
+		53FFCEF62F3CC29D00023103 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53FFCEB12F3CC29C00023103 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 53FFCEDB2F3CC29D00023103;
+			remoteInfo = "andere-boxing Watch App";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		53FFCF022F3CC29D00023103 /* Embed Watch Content */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "$(CONTENTS_FOLDER_PATH)/Watch";
+			dstSubfolderSpec = 16;
+			files = (
+				53FFCEDD2F3CC29D00023103 /* andere-boxing Watch App.app in Embed Watch Content */,
+			);
+			name = "Embed Watch Content";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		53FFCEB92F3CC29C00023103 /* andere-boxing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "andere-boxing.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53FFCEC62F3CC29D00023103 /* andere-boxingTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "andere-boxingTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53FFCED02F3CC29D00023103 /* andere-boxingUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "andere-boxingUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53FFCEDC2F3CC29D00023103 /* andere-boxing Watch App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "andere-boxing Watch App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53FFCEEB2F3CC29D00023103 /* andere-boxing Watch AppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "andere-boxing Watch AppTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		53FFCEF52F3CC29D00023103 /* andere-boxing Watch AppUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "andere-boxing Watch AppUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		53FFCEBB2F3CC29C00023103 /* andere-boxing */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "andere-boxing";
+			sourceTree = "<group>";
+		};
+		53FFCEC92F3CC29D00023103 /* andere-boxingTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "andere-boxingTests";
+			sourceTree = "<group>";
+		};
+		53FFCED32F3CC29D00023103 /* andere-boxingUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "andere-boxingUITests";
+			sourceTree = "<group>";
+		};
+		53FFCEE02F3CC29D00023103 /* andere-boxing Watch App */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "andere-boxing Watch App";
+			sourceTree = "<group>";
+		};
+		53FFCEEE2F3CC29D00023103 /* andere-boxing Watch AppTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "andere-boxing Watch AppTests";
+			sourceTree = "<group>";
+		};
+		53FFCEF82F3CC29D00023103 /* andere-boxing Watch AppUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = "andere-boxing Watch AppUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		53FFCEB62F3CC29C00023103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEC32F3CC29D00023103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCECD2F3CC29D00023103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCED92F3CC29D00023103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEE82F3CC29D00023103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEF22F3CC29D00023103 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		53FFCEB02F3CC29C00023103 = {
+			isa = PBXGroup;
+			children = (
+				53FFCEBB2F3CC29C00023103 /* andere-boxing */,
+				53FFCEC92F3CC29D00023103 /* andere-boxingTests */,
+				53FFCED32F3CC29D00023103 /* andere-boxingUITests */,
+				53FFCEE02F3CC29D00023103 /* andere-boxing Watch App */,
+				53FFCEEE2F3CC29D00023103 /* andere-boxing Watch AppTests */,
+				53FFCEF82F3CC29D00023103 /* andere-boxing Watch AppUITests */,
+				53FFCEBA2F3CC29C00023103 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		53FFCEBA2F3CC29C00023103 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				53FFCEB92F3CC29C00023103 /* andere-boxing.app */,
+				53FFCEC62F3CC29D00023103 /* andere-boxingTests.xctest */,
+				53FFCED02F3CC29D00023103 /* andere-boxingUITests.xctest */,
+				53FFCEDC2F3CC29D00023103 /* andere-boxing Watch App.app */,
+				53FFCEEB2F3CC29D00023103 /* andere-boxing Watch AppTests.xctest */,
+				53FFCEF52F3CC29D00023103 /* andere-boxing Watch AppUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		53FFCEB82F3CC29C00023103 /* andere-boxing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FFCF032F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing" */;
+			buildPhases = (
+				53FFCEB52F3CC29C00023103 /* Sources */,
+				53FFCEB62F3CC29C00023103 /* Frameworks */,
+				53FFCEB72F3CC29C00023103 /* Resources */,
+				53FFCF022F3CC29D00023103 /* Embed Watch Content */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53FFCEDF2F3CC29D00023103 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				53FFCEBB2F3CC29C00023103 /* andere-boxing */,
+			);
+			name = "andere-boxing";
+			packageProductDependencies = (
+			);
+			productName = "andere-boxing";
+			productReference = 53FFCEB92F3CC29C00023103 /* andere-boxing.app */;
+			productType = "com.apple.product-type.application";
+		};
+		53FFCEC52F3CC29D00023103 /* andere-boxingTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FFCF062F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxingTests" */;
+			buildPhases = (
+				53FFCEC22F3CC29D00023103 /* Sources */,
+				53FFCEC32F3CC29D00023103 /* Frameworks */,
+				53FFCEC42F3CC29D00023103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53FFCEC82F3CC29D00023103 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				53FFCEC92F3CC29D00023103 /* andere-boxingTests */,
+			);
+			name = "andere-boxingTests";
+			packageProductDependencies = (
+			);
+			productName = "andere-boxingTests";
+			productReference = 53FFCEC62F3CC29D00023103 /* andere-boxingTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		53FFCECF2F3CC29D00023103 /* andere-boxingUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FFCF092F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxingUITests" */;
+			buildPhases = (
+				53FFCECC2F3CC29D00023103 /* Sources */,
+				53FFCECD2F3CC29D00023103 /* Frameworks */,
+				53FFCECE2F3CC29D00023103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53FFCED22F3CC29D00023103 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				53FFCED32F3CC29D00023103 /* andere-boxingUITests */,
+			);
+			name = "andere-boxingUITests";
+			packageProductDependencies = (
+			);
+			productName = "andere-boxingUITests";
+			productReference = 53FFCED02F3CC29D00023103 /* andere-boxingUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+		53FFCEDB2F3CC29D00023103 /* andere-boxing Watch App */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FFCEFF2F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing Watch App" */;
+			buildPhases = (
+				53FFCED82F3CC29D00023103 /* Sources */,
+				53FFCED92F3CC29D00023103 /* Frameworks */,
+				53FFCEDA2F3CC29D00023103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				53FFCEE02F3CC29D00023103 /* andere-boxing Watch App */,
+			);
+			name = "andere-boxing Watch App";
+			packageProductDependencies = (
+			);
+			productName = "andere-boxing Watch App";
+			productReference = 53FFCEDC2F3CC29D00023103 /* andere-boxing Watch App.app */;
+			productType = "com.apple.product-type.application";
+		};
+		53FFCEEA2F3CC29D00023103 /* andere-boxing Watch AppTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FFCF0C2F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing Watch AppTests" */;
+			buildPhases = (
+				53FFCEE72F3CC29D00023103 /* Sources */,
+				53FFCEE82F3CC29D00023103 /* Frameworks */,
+				53FFCEE92F3CC29D00023103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53FFCEED2F3CC29D00023103 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				53FFCEEE2F3CC29D00023103 /* andere-boxing Watch AppTests */,
+			);
+			name = "andere-boxing Watch AppTests";
+			packageProductDependencies = (
+			);
+			productName = "andere-boxing Watch AppTests";
+			productReference = 53FFCEEB2F3CC29D00023103 /* andere-boxing Watch AppTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		53FFCEF42F3CC29D00023103 /* andere-boxing Watch AppUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 53FFCF0F2F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing Watch AppUITests" */;
+			buildPhases = (
+				53FFCEF12F3CC29D00023103 /* Sources */,
+				53FFCEF22F3CC29D00023103 /* Frameworks */,
+				53FFCEF32F3CC29D00023103 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				53FFCEF72F3CC29D00023103 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				53FFCEF82F3CC29D00023103 /* andere-boxing Watch AppUITests */,
+			);
+			name = "andere-boxing Watch AppUITests";
+			packageProductDependencies = (
+			);
+			productName = "andere-boxing Watch AppUITests";
+			productReference = 53FFCEF52F3CC29D00023103 /* andere-boxing Watch AppUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		53FFCEB12F3CC29C00023103 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 2620;
+				LastUpgradeCheck = 2620;
+				TargetAttributes = {
+					53FFCEB82F3CC29C00023103 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					53FFCEC52F3CC29D00023103 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 53FFCEB82F3CC29C00023103;
+					};
+					53FFCECF2F3CC29D00023103 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 53FFCEB82F3CC29C00023103;
+					};
+					53FFCEDB2F3CC29D00023103 = {
+						CreatedOnToolsVersion = 26.2;
+					};
+					53FFCEEA2F3CC29D00023103 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 53FFCEDB2F3CC29D00023103;
+					};
+					53FFCEF42F3CC29D00023103 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = 53FFCEDB2F3CC29D00023103;
+					};
+				};
+			};
+			buildConfigurationList = 53FFCEB42F3CC29C00023103 /* Build configuration list for PBXProject "andere-boxing" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 53FFCEB02F3CC29C00023103;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 53FFCEBA2F3CC29C00023103 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				53FFCEB82F3CC29C00023103 /* andere-boxing */,
+				53FFCEC52F3CC29D00023103 /* andere-boxingTests */,
+				53FFCECF2F3CC29D00023103 /* andere-boxingUITests */,
+				53FFCEDB2F3CC29D00023103 /* andere-boxing Watch App */,
+				53FFCEEA2F3CC29D00023103 /* andere-boxing Watch AppTests */,
+				53FFCEF42F3CC29D00023103 /* andere-boxing Watch AppUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		53FFCEB72F3CC29C00023103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEC42F3CC29D00023103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCECE2F3CC29D00023103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEDA2F3CC29D00023103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEE92F3CC29D00023103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEF32F3CC29D00023103 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		53FFCEB52F3CC29C00023103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEC22F3CC29D00023103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCECC2F3CC29D00023103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCED82F3CC29D00023103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEE72F3CC29D00023103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		53FFCEF12F3CC29D00023103 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		53FFCEC82F3CC29D00023103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53FFCEB82F3CC29C00023103 /* andere-boxing */;
+			targetProxy = 53FFCEC72F3CC29D00023103 /* PBXContainerItemProxy */;
+		};
+		53FFCED22F3CC29D00023103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53FFCEB82F3CC29C00023103 /* andere-boxing */;
+			targetProxy = 53FFCED12F3CC29D00023103 /* PBXContainerItemProxy */;
+		};
+		53FFCEDF2F3CC29D00023103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53FFCEDB2F3CC29D00023103 /* andere-boxing Watch App */;
+			targetProxy = 53FFCEDE2F3CC29D00023103 /* PBXContainerItemProxy */;
+		};
+		53FFCEED2F3CC29D00023103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53FFCEDB2F3CC29D00023103 /* andere-boxing Watch App */;
+			targetProxy = 53FFCEEC2F3CC29D00023103 /* PBXContainerItemProxy */;
+		};
+		53FFCEF72F3CC29D00023103 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 53FFCEDB2F3CC29D00023103 /* andere-boxing Watch App */;
+			targetProxy = 53FFCEF62F3CC29D00023103 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		53FFCEFD2F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		53FFCEFE2F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		53FFCF002F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "andere-boxing";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.monodev.andere-boxing-watch.andere-boxing";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		53FFCF012F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "andere-boxing";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown";
+				INFOPLIST_KEY_WKCompanionAppBundleIdentifier = "com.monodev.andere-boxing-watch.andere-boxing";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing.watchkitapp";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				SKIP_INSTALL = YES;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		53FFCF042F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "andere-boxing";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		53FFCF052F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_CFBundleDisplayName = "andere-boxing";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		53FFCF072F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxingTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/andere-boxing.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/andere-boxing";
+			};
+			name = Debug;
+		};
+		53FFCF082F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxingTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/andere-boxing.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/andere-boxing";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		53FFCF0A2F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxingUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "andere-boxing";
+			};
+			name = Debug;
+		};
+		53FFCF0B2F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxingUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = iphoneos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "andere-boxing";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		53FFCF0D2F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/andere-boxing Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/andere-boxing Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		53FFCF0E2F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing-Watch-AppTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/andere-boxing Watch App.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/andere-boxing Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+		53FFCF102F3CC29D00023103 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "andere-boxing Watch App";
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Debug;
+		};
+		53FFCF112F3CC29D00023103 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = MJ88Y4S79Z;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.monodev.andere-boxing-watch.andere-boxing-Watch-AppUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = watchos;
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 4;
+				TEST_TARGET_NAME = "andere-boxing Watch App";
+				VALIDATE_PRODUCT = YES;
+				WATCHOS_DEPLOYMENT_TARGET = 26.2;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		53FFCEB42F3CC29C00023103 /* Build configuration list for PBXProject "andere-boxing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCEFD2F3CC29D00023103 /* Debug */,
+				53FFCEFE2F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FFCEFF2F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing Watch App" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCF002F3CC29D00023103 /* Debug */,
+				53FFCF012F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FFCF032F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCF042F3CC29D00023103 /* Debug */,
+				53FFCF052F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FFCF062F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxingTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCF072F3CC29D00023103 /* Debug */,
+				53FFCF082F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FFCF092F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxingUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCF0A2F3CC29D00023103 /* Debug */,
+				53FFCF0B2F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FFCF0C2F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing Watch AppTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCF0D2F3CC29D00023103 /* Debug */,
+				53FFCF0E2F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		53FFCF0F2F3CC29D00023103 /* Build configuration list for PBXNativeTarget "andere-boxing Watch AppUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				53FFCF102F3CC29D00023103 /* Debug */,
+				53FFCF112F3CC29D00023103 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 53FFCEB12F3CC29C00023103 /* Project object */;
+}
