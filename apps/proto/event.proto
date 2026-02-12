@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package andere_boxing;
+
+option go_package = "github.com/mono0218/andere-boxing/proto";
+
+message NetworkEvent {
+  string room_id = 1;
+  string user_id = 2;
+  int64 timestamp = 3;
+
+  oneof event {
+    UserAction user_action = 4;
+    RoomAction room_action = 5;
+  }
+}
+
+enum UserAction {
+  USER_ACTION_UNSPECIFIED = 0;
+  USER_ACTION_PUNCH = 1;
+  USER_ACTION_DEFEND = 2;
+}
+
+enum RoomAction {
+  ROOM_ACTION_UNSPECIFIED = 0;
+  ROOM_ACTION_CREATE = 1;
+  ROOM_ACTION_START = 2;
+  ROOM_ACTION_END = 3;
+  ROOM_ACTION_DELETE = 4;
+}
