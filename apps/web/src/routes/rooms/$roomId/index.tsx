@@ -1,29 +1,41 @@
 import { createFileRoute } from '@tanstack/react-router'
+import { AgonesClient } from '@/libs/agones'
+
+const agones = new AgonesClient({
+  baseUrl: process.env.AGONES_ALLOCATOR_URL ?? 'http://agones-allocator.agones-system.svc',
+  namespace: process.env.AGONES_NAMESPACE ?? 'default',
+})
 
 export const Route = createFileRoute('/rooms/$roomId/')({
-  server:{
-    handlers:{
+  server: {
+    handlers: {
       GET: async ({ params }) => {
-        const { roomId } = params;
+        const { roomId } = params
 
-        // Here you would typically fetch room details from your database
-        console.log(`Fetching details for room ID: ${roomId}`);
+        try {
+          const server = await agones.findServerByRoomId(roomId)
 
-        return new Response(`Details for room ID: ${roomId}`, {
-          status: 200,
-        });
+          if (!server) {
+            return Response.json({ error: 'Room not found' }, { status: 404 })
+          }
+
+          return Response.json({
+            roomId,
+            server: {
+              name: server.metadata.name,
+              address: server.status.address,
+              ports: server.status.ports,
+              state: server.status.state,
+            },
+          })
+        } catch (error) {
+          return Response.json(
+            { error: error instanceof Error ? error.message : 'Failed to find server' },
+            { status: 500 }
+          )
+        }
       },
-      DELETE: async ({ params }) => {
-        const { roomId } = params;
-
-        // Here you would typically delete the room from your database
-        console.log(`Deleting room ID: ${roomId}`);
-
-        return new Response(`Room ID: ${roomId} deleted successfully!`, {
-          status: 200,
-        });
-      }
-    }
+    },
   },
   component: RouteComponent,
 })
