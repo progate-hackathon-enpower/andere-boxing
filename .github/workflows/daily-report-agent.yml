@@ -13,7 +13,7 @@ jobs:
       issues: read
       pull-requests: read
     env:
-      GH_TOKEN: ${{ github.token }}
+      GH_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
       DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     steps:
       - name: Checkout repository
@@ -23,8 +23,6 @@ jobs:
 
       - name: Install gh-aw extension
         run: gh extension install github/gh-aw
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Agentic Workflow
         run: gh aw run .github/workflows/agentic/daily-report.md
