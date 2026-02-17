@@ -1,8 +1,8 @@
-name: Discord通知
+name: レポートDiscord配信
 
 on:
   issues:
-    types: [opened]
+    types: [opened, labeled]
 
 jobs:
   notify:
