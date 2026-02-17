@@ -8,13 +8,13 @@ on:
 jobs:
   agentic-report:
     runs-on: ubuntu-latest
-    env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     permissions:
-      contents: read
+      contents: write
       issues: read
       pull-requests: read
+    env:
+      GH_TOKEN: ${{ github.token }}
+      DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
