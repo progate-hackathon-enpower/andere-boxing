@@ -8,6 +8,9 @@ on:
 jobs:
   agentic-report:
     runs-on: ubuntu-latest
+    env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
     permissions:
       contents: read
       issues: read
@@ -23,6 +26,3 @@ jobs:
 
       - name: Run Agentic Workflow
         run: gh aw run .github/workflows/agentic/daily-report.md
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
