@@ -23,6 +23,8 @@ jobs:
 
       - name: Install gh-aw extension
         run: gh extension install github/gh-aw
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run Agentic Workflow
         run: gh aw run .github/workflows/agentic/daily-report.md
