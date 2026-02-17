@@ -2,6 +2,8 @@
 on:
   schedule: daily
 
+engine: claude
+
 permissions:
   contents: read
   issues: read
