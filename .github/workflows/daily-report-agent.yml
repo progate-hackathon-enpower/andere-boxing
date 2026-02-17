@@ -24,5 +24,8 @@ jobs:
       - name: Install gh-aw extension
         run: gh extension install github/gh-aw
 
+      - name: Compile Agentic Workflow
+        run: gh aw compile .github/workflows/agentic/daily-report.md
+
       - name: Run Agentic Workflow
         run: gh aw run .github/workflows/agentic/daily-report.md
