@@ -1,0 +1,28 @@
+name: Daily Report Agent
+
+on:
+  schedule:
+    - cron: '0 14 * * *' # 毎日日本時間23時（UTC 14:00）に実行
+  workflow_dispatch: # 手動実行用
+
+jobs:
+  agentic-report:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 履歴をすべて取得
+
+      - name: Install gh-aw extension
+        run: gh extension install github/gh-aw
+
+      - name: Run Agentic Workflow
+        run: gh aw run .github/workflows/agentic/daily-report.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
