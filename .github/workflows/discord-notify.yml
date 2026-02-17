@@ -1,0 +1,33 @@
+name: Discord通知
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  notify:
+    if: contains(github.event.issue.labels.*.name, 'report')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discordに通知
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          # 本文を300文字に切り詰め
+          SUMMARY=$(echo "$ISSUE_BODY" | head -c 300)
+          if [ ${#ISSUE_BODY} -gt 300 ]; then
+            SUMMARY="${SUMMARY}..."
+          fi
+
+          # JSONペイロードを構築して送信
+          jq -n \
+            --arg title "$ISSUE_TITLE" \
+            --arg summary "$SUMMARY" \
+            --arg url "$ISSUE_URL" \
+            '{content: "📋 **\($title)**\n\n\($summary)\n\n🔗 \($url)"}' | \
+          curl -s -H "Content-Type: application/json" \
+            -d @- \
+            "$DISCORD_WEBHOOK_URL"
