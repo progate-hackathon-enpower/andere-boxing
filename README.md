@@ -1,4 +1,17 @@
-# ラッシュバトル！
+<p align="center">
+  <img
+    src="https://github.com/user-attachments/assets/bce54061-e001-40b4-a349-08cd9acfc901"
+    alt="image"
+    width="400"
+  />
+</p>
+
+<h1 align="center">
+  <ruby>
+    突き<rt>ラッシュ</rt>
+  </ruby>
+  の速さ比べか？
+</h1>
 
 Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で Rust 製の低遅延同期サーバーと通信し、Web UI 上でアバター同士をリアルタイムに対戦させる格闘ゲーム。
 
