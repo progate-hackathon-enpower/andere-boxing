@@ -6,7 +6,7 @@ paths: [apps/web/**/*.{ts,tsx}]
 
 ## 型定義
 
-- `any` は使用禁止。`unknown` を使い、型ガードで絞り込む
+- `any`と`unknown`は禁止。できる限り既存の型を使いつつ、ない場合は作成する。
 - 関数の引数と返り値には明示的に型を付ける
 - `interface` よりも `type` を優先する（union や intersection が必要な場面が多いため）
 
