@@ -36,7 +36,7 @@ resource "aws_security_group" "eks_private_node" {
   ingress {
     description = "Allow private nodes to communicate with each other"
     from_port   = 0
-    to_port     = 65535
+    to_port     = 0
     protocol    = "-1"
     self        = true
   }
@@ -73,7 +73,7 @@ resource "aws_security_group" "eks_public_node" {
   ingress {
     description = "Allow public nodes to communicate with each other"
     from_port   = 0
-    to_port     = 65535
+    to_port     = 0
     protocol    = "-1"
     self        = true
   }

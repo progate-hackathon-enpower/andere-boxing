@@ -11,32 +11,34 @@ resource "aws_vpc" "main" {
   )
 }
 
-# Public Subnet
+# Public Subnets (Multi-AZ)
 resource "aws_subnet" "public" {
+  count                   = length(var.availability_zones)
   vpc_id                  = aws_vpc.main.id
-  cidr_block              = var.public_subnet_cidr
-  availability_zone       = var.availability_zone
+  cidr_block              = var.public_subnet_cidrs[count.index]
+  availability_zone       = var.availability_zones[count.index]
   map_public_ip_on_launch = true
 
   tags = merge(
     var.tags,
     {
-      Name = "${var.project_name}-public-subnet"
+      Name = "${var.project_name}-public-subnet-${count.index + 1}"
       Type = "Public"
     }
   )
 }
 
-# Private Subnet for EKS
+# Private Subnets for EKS (Multi-AZ)
 resource "aws_subnet" "eks" {
+  count             = length(var.availability_zones)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_eks_cidr
-  availability_zone = var.availability_zone
+  cidr_block        = var.private_subnet_eks_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
 
   tags = merge(
     var.tags,
     {
-      Name                                          = "${var.project_name}-private-eks"
+      Name                                          = "${var.project_name}-private-eks-${count.index + 1}"
       Type                                          = "Private"
       "kubernetes.io/role/elb"                      = "1"
       "kubernetes.io/cluster/${var.project_name}"   = "owned"
@@ -44,31 +46,33 @@ resource "aws_subnet" "eks" {
   )
 }
 
-# Private Subnet for ECR/Observability
+# Private Subnets for ECR/Observability (Multi-AZ)
 resource "aws_subnet" "observability" {
+  count             = length(var.availability_zones)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_observability_cidr
-  availability_zone = var.availability_zone
+  cidr_block        = var.private_subnet_observability_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
 
   tags = merge(
     var.tags,
     {
-      Name = "${var.project_name}-private-observability"
+      Name = "${var.project_name}-private-observability-${count.index + 1}"
       Type = "Private"
     }
   )
 }
 
-# Private Subnet for Lambda
+# Private Subnets for Lambda (Multi-AZ)
 resource "aws_subnet" "lambda" {
+  count             = length(var.availability_zones)
   vpc_id            = aws_vpc.main.id
-  cidr_block        = var.private_subnet_lambda_cidr
-  availability_zone = var.availability_zone
+  cidr_block        = var.private_subnet_lambda_cidrs[count.index]
+  availability_zone = var.availability_zones[count.index]
 
   tags = merge(
     var.tags,
     {
-      Name = "${var.project_name}-private-lambda"
+      Name = "${var.project_name}-private-lambda-${count.index + 1}"
       Type = "Private"
     }
   )

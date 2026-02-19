@@ -8,24 +8,24 @@ output "vpc_cidr" {
   description = "VPC CIDR block"
 }
 
-output "public_subnet_id" {
-  value       = aws_subnet.public.id
-  description = "Public subnet ID"
+output "public_subnet_ids" {
+  value       = aws_subnet.public[*].id
+  description = "Public subnet IDs"
 }
 
-output "private_subnet_eks_id" {
-  value       = aws_subnet.eks.id
-  description = "Private EKS subnet ID"
+output "private_subnet_eks_ids" {
+  value       = aws_subnet.eks[*].id
+  description = "Private EKS subnet IDs"
 }
 
-output "private_subnet_observability_id" {
-  value       = aws_subnet.observability.id
-  description = "Private observability subnet ID"
+output "private_subnet_observability_ids" {
+  value       = aws_subnet.observability[*].id
+  description = "Private observability subnet IDs"
 }
 
-output "private_subnet_lambda_id" {
-  value       = aws_subnet.lambda.id
-  description = "Private Lambda subnet ID"
+output "private_subnet_lambda_ids" {
+  value       = aws_subnet.lambda[*].id
+  description = "Private Lambda subnet IDs"
 }
 
 output "internet_gateway_id" {
@@ -34,20 +34,20 @@ output "internet_gateway_id" {
 }
 
 output "private_subnet_ids" {
-  value = [
-    aws_subnet.eks.id,
-    aws_subnet.observability.id,
-    aws_subnet.lambda.id
-  ]
-  description = "Private subnet IDs for NAT Gateway routing"
+  value = concat(
+    aws_subnet.eks[*].id,
+    aws_subnet.observability[*].id,
+    aws_subnet.lambda[*].id
+  )
+  description = "All private subnet IDs for NAT Gateway routing"
 }
 
 output "all_subnet_ids" {
-  value = [
-    aws_subnet.public.id,
-    aws_subnet.eks.id,
-    aws_subnet.observability.id,
-    aws_subnet.lambda.id
-  ]
+  value = concat(
+    aws_subnet.public[*].id,
+    aws_subnet.eks[*].id,
+    aws_subnet.observability[*].id,
+    aws_subnet.lambda[*].id
+  )
   description = "All subnet IDs"
 }

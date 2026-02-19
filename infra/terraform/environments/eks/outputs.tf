@@ -14,14 +14,14 @@ output "cluster_certificate_authority_data" {
   sensitive   = true
 }
 
-output "cluster_security_group_id" {
-  description = "EKS cluster security group ID"
-  value       = module.eks.cluster_security_group_id
+output "private_node_group_id" {
+  description = "EKS private node group ID"
+  value       = module.eks.private_node_group_id
 }
 
-output "node_security_group_id" {
-  description = "EKS node group security group ID"
-  value       = module.eks.node_security_group_id
+output "public_node_group_id" {
+  description = "EKS public node group ID"
+  value       = module.eks.public_node_group_id
 }
 
 output "cluster_oidc_issuer_url" {

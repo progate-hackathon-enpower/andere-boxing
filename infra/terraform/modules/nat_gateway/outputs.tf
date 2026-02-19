@@ -1,19 +1,19 @@
-output "nat_gateway_id" {
-  value       = aws_nat_gateway.main.id
-  description = "NAT Gateway ID"
+output "nat_gateway_ids" {
+  value       = aws_nat_gateway.main[*].id
+  description = "NAT Gateway IDs"
 }
 
-output "nat_eip" {
-  value       = aws_eip.nat.public_ip
-  description = "NAT Gateway Elastic IP"
+output "nat_eips" {
+  value       = aws_eip.nat[*].public_ip
+  description = "NAT Gateway Elastic IPs"
 }
 
-output "public_route_table_id" {
-  value       = aws_route_table.public.id
-  description = "Public route table ID"
+output "public_route_table_ids" {
+  value       = aws_route_table.public[*].id
+  description = "Public route table IDs"
 }
 
-output "private_route_table_id" {
-  value       = aws_route_table.private.id
-  description = "Private route table ID"
+output "private_route_table_ids" {
+  value       = aws_route_table.private[*].id
+  description = "Private route table IDs"
 }

@@ -31,17 +31,19 @@ data "aws_vpc" "main" {
   }
 }
 
-# Data source to get public subnet
-data "aws_subnet" "public" {
-  tags = {
-    Name = "${var.project_name}-public-subnet"
+# Data source to get public subnets (Multi-AZ)
+data "aws_subnets" "public" {
+  filter {
+    name   = "tag:Name"
+    values = ["${var.project_name}-public-subnet-*"]
   }
 }
 
-# Data source to get private EKS subnet
-data "aws_subnet" "eks" {
-  tags = {
-    Name = "${var.project_name}-private-eks"
+# Data source to get private EKS subnets (Multi-AZ)
+data "aws_subnets" "eks" {
+  filter {
+    name   = "tag:Name"
+    values = ["${var.project_name}-private-eks-*"]
   }
 }
 
@@ -63,9 +65,9 @@ module "eks" {
 
   project_name                   = var.project_name
   environment                    = var.environment
-  subnet_ids                     = [data.aws_subnet.public.id, data.aws_subnet.eks.id]
-  private_subnet_ids             = [data.aws_subnet.eks.id]
-  public_subnet_ids              = [data.aws_subnet.public.id]
+  subnet_ids                     = concat(data.aws_subnets.public.ids, data.aws_subnets.eks.ids)
+  private_subnet_ids             = data.aws_subnets.eks.ids
+  public_subnet_ids              = data.aws_subnets.public.ids
   cluster_security_group_id      = module.security_group.eks_cluster_security_group_id
   private_node_security_group_id = module.security_group.eks_private_node_security_group_id
   public_node_security_group_id  = module.security_group.eks_public_node_security_group_id
