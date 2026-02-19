@@ -1,0 +1,11 @@
+# Bootstrap Configuration
+aws_region   = "ap-northeast-1"
+environment  = "staging"
+project_name = "andere-boxing"
+
+# Bucket naming: If enable_deterministic_naming=true, bucket name will be:
+# ${project_name}-terraform-state-${aws_account_id}
+# Otherwise, specify custom names below:
+enable_deterministic_naming         = true
+terraform_state_bucket_name         = ""  # Leave empty if using deterministic naming
+terraform_state_lock_table_name     = ""  # Leave empty if using deterministic naming
