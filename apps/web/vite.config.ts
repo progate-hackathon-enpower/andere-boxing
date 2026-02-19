@@ -6,8 +6,6 @@ import viteTsConfigPaths from 'vite-tsconfig-paths'
 import { fileURLToPath, URL } from 'url'
 import { nitro } from 'nitro/vite'
 import tailwindcss from '@tailwindcss/vite'
-import { cloudflare } from "@cloudflare/vite-plugin";
-
 
 const config = defineConfig({
   resolve: {
@@ -15,18 +13,20 @@ const config = defineConfig({
       '@': fileURLToPath(new URL('./src', import.meta.url)),
     },
   },
+  ssr: {
+    // PixiJS はブラウザ専用のため、Vite に直接バンドルさせて
+    // Node.js の ESM 拡張子解決エラーを回避する
+    noExternal: ['@pixi/react', 'pixi.js'],
+  },
   plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
     devtools(),
     nitro(),
-    // this is the plugin that enables path aliases
     viteTsConfigPaths({
       projects: ['./tsconfig.json'],
     }),
-
     tanstackStart(),
     viteReact(),
-    tailwindcss()
+    tailwindcss(),
   ],
 })
 
