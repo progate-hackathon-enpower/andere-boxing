@@ -58,7 +58,10 @@ apps/
 └── proto/            # Protocol Buffers 定義
 infra/
 ├── argocd/           # Kubernetes マニフェスト
-└── terraform/        # IaC
+└── terraform/        # IaC (Terraform)
+    ├── bootstrap/    # S3 バックエンド初期化
+    ├── environments/ # 環境別構成（network/app/shared）
+    └── modules/      # 再利用可能なモジュール（vpc/ecr/iam など）
 ```
 
 ## 開発環境構築
