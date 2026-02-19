@@ -1,16 +1,16 @@
-import { Link, createFileRoute } from '@tanstack/react-router'
+import { Link, createFileRoute } from "@tanstack/react-router";
 
-export const Route = createFileRoute('/game')({ component: GameScreen })
+export const Route = createFileRoute("/game")({ component: GameScreen });
 
 function GameScreen() {
   return (
-    <div className="flex items-start justify-end h-full p-4">
+    <div className="flex h-full items-start justify-end p-4">
       <Link
         to="/result"
-        className="px-6 py-3 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg transition-colors"
+        className="rounded-xl bg-red-600 px-6 py-3 font-bold text-white shadow-lg transition-colors hover:bg-red-700"
       >
         ゲーム終了
       </Link>
     </div>
-  )
+  );
 }
