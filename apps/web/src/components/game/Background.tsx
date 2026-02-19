@@ -1,31 +1,31 @@
-import { extend, useApplication } from '@pixi/react'
+import { extend } from '@pixi/react'
 import { Assets, Sprite, Texture } from 'pixi.js'
 import { useEffect, useState } from 'react'
 
 extend({ Sprite })
 
 export function Background() {
-  const { app } = useApplication()
   const [texture, setTexture] = useState<Texture | null>(null)
+  // resizeTo={window} により PixiJS canvas は常に window サイズと一致するため
+  // app.screen ではなく window.innerWidth/Height を使うことで renderer 初期化タイミングを回避
   const [size, setSize] = useState({
-    width: app.screen.width,
-    height: app.screen.height,
+    width: window.innerWidth,
+    height: window.innerHeight,
   })
 
   useEffect(() => {
     Assets.load<Texture>('/assets/background.png').then(setTexture)
   }, [])
 
-  // ウィンドウリサイズ時にスプライトサイズを同期する
   useEffect(() => {
     const onResize = () => {
-      setSize({ width: app.screen.width, height: app.screen.height })
+      setSize({ width: window.innerWidth, height: window.innerHeight })
     }
-    app.renderer.on('resize', onResize)
+    window.addEventListener('resize', onResize)
     return () => {
-      app.renderer.off('resize', onResize)
+      window.removeEventListener('resize', onResize)
     }
-  }, [app])
+  }, [])
 
   if (!texture) return null
 
