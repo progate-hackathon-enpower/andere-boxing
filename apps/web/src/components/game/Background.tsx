@@ -14,7 +14,13 @@ export function Background() {
   });
 
   useEffect(() => {
-    Assets.load<Texture>("/assets/background.png").then(setTexture);
+    let cancelled = false;
+    Assets.load<Texture>("/assets/background.png").then((t) => {
+      if (!cancelled) setTexture(t);
+    });
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
   useEffect(() => {
