@@ -1,52 +1,58 @@
-import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router'
+import { HeadContent, Outlet, Scripts, createRootRoute } from '@tanstack/react-router'
 import { TanStackRouterDevtoolsPanel } from '@tanstack/react-router-devtools'
 import { TanStackDevtools } from '@tanstack/react-devtools'
+import { useEffect, useState } from 'react'
+import { GameStage } from '../components/game/GameStage'
 import appCss from '../App.css?url'
-
 
 export const Route = createRootRoute({
   head: () => ({
     meta: [
-      {
-        charSet: 'utf-8',
-      },
-      {
-        name: 'viewport',
-        content: 'width=device-width, initial-scale=1',
-      },
-      {
-        title: 'TanStack Start Starter',
-      },
+      { charSet: 'utf-8' },
+      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      { title: 'Andere Boxing' },
     ],
-    links: [
-      {
-        rel: 'stylesheet',
-        href: appCss
-      },
-    ],
+    links: [{ rel: 'stylesheet', href: appCss }],
   }),
 
+  component: RootLayout,
   shellComponent: RootDocument,
 })
 
+function RootLayout() {
+  // React 19 SSR は lazy() + Suspense でもコンポーネントを実行するため、
+  // useEffect で確実にクライアント側のみレンダリングする
+  const [mounted, setMounted] = useState(false)
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  return (
+    <div className="game-container">
+      {/* PixiJS 背景レイヤー（クライアントマウント後のみ） */}
+      <div className="pixi-layer">
+        {mounted && <GameStage />}
+      </div>
+      {/* React UI オーバーレイ */}
+      <div className="ui-layer">
+        <Outlet />
+      </div>
+    </div>
+  )
+}
+
 function RootDocument({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="ja">
       <head>
         <HeadContent />
       </head>
       <body>
         {children}
         <TanStackDevtools
-          config={{
-            position: 'bottom-right',
-          }}
-          plugins={[
-            {
-              name: 'Tanstack Router',
-              render: <TanStackRouterDevtoolsPanel />,
-            },
-          ]}
+          config={{ position: 'bottom-right' }}
+          plugins={[{ name: 'Tanstack Router', render: <TanStackRouterDevtoolsPanel /> }]}
         />
         <Scripts />
       </body>
