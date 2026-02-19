@@ -29,11 +29,11 @@ module "vpc" {
   source = "../../modules/vpc"
 
   vpc_cidr                            = var.vpc_cidr
-  public_subnet_cidr                  = var.public_subnet_cidr
-  private_subnet_eks_cidr             = var.private_subnet_eks_cidr
-  private_subnet_observability_cidr   = var.private_subnet_observability_cidr
-  private_subnet_lambda_cidr          = var.private_subnet_lambda_cidr
-  availability_zone                   = var.availability_zone
+  availability_zones                  = var.availability_zones
+  public_subnet_cidrs                 = var.public_subnet_cidrs
+  private_subnet_eks_cidrs            = var.private_subnet_eks_cidrs
+  private_subnet_observability_cidrs  = var.private_subnet_observability_cidrs
+  private_subnet_lambda_cidrs         = var.private_subnet_lambda_cidrs
   environment                         = var.environment
   project_name                        = var.project_name
 
@@ -44,11 +44,12 @@ module "vpc" {
 module "nat_gateway" {
   source = "../../modules/nat_gateway"
 
-  public_subnet_id      = module.vpc.public_subnet_id
-  private_subnet_ids    = module.vpc.private_subnet_ids
-  internet_gateway_id   = module.vpc.internet_gateway_id
-  environment           = var.environment
-  project_name          = var.project_name
+  public_subnet_ids      = module.vpc.public_subnet_ids
+  availability_zones     = var.availability_zones
+  private_subnet_ids     = module.vpc.private_subnet_ids
+  internet_gateway_id    = module.vpc.internet_gateway_id
+  environment            = var.environment
+  project_name           = var.project_name
 
   tags = local.common_tags
 
