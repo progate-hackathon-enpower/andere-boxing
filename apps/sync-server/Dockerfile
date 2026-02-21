@@ -1,10 +1,15 @@
 # Build stage
-FROM rust:1.83-slim-bookworm AS builder
+FROM rust:1.85-slim-bookworm AS builder
+
+# Install protobuf compiler
+RUN apt-get update && apt-get install -y \
+    protobuf-compiler \
+    && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
 # Copy sync-server source
-COPY apps/sync-server /app/sync-server
+COPY . /app/sync-server
 
 WORKDIR /app/sync-server
 

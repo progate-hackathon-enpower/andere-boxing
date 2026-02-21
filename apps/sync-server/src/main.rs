@@ -20,7 +20,7 @@ async fn main() -> anyhow::Result<()> {
     agones.start_health_thread();
 
     // Start game server
-    let addr = SocketAddr::new(Ipv4Addr::LOCALHOST.into(), 4433);
+    let addr = SocketAddr::new(Ipv4Addr::UNSPECIFIED.into(), 4433);
     info!("Starting server on {}", addr);
 
     let server = GameServer::new(addr).await?;

@@ -4,7 +4,7 @@ project_name        = "andere-boxing"
 
 # EKS Configuration
 kubernetes_version  = "1.29"
-node_instance_types = ["t3.medium"]
+node_instance_types = ["t2.small"]
 capacity_type       = "SPOT"  # ハッカソンなのでコスト削減のためSPOT
 
 # Private node group (2 nodes)
