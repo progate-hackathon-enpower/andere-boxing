@@ -9,9 +9,8 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy sync-server source
-COPY . /app/sync-server
-
-WORKDIR /app/sync-server
+COPY Cargo.toml Cargo.lock ./
+COPY src ./src
 
 # Build release binary
 RUN cargo build --release
@@ -26,7 +25,7 @@ RUN apt-get update && apt-get install -y \
 WORKDIR /app
 
 # Copy the built binary
-COPY --from=builder /app/sync-server/target/release/sync-server /app/sync-server
+COPY --from=builder /app/target/release/sync-server /app/sync-server
 
 # Expose WebTransport port
 EXPOSE 4433/udp
