@@ -84,7 +84,10 @@ resource "aws_iam_role_policy" "aws_resources_policy" {
           "logs:*",
           "cloudwatch:*",
           "iam:*",
-          "vpc:*"
+          "vpc:*",
+          "amplify:*",
+          "secretsmanager:GetSecretValue",
+          "secretsmanager:DescribeSecret"
         ]
         Resource = "*"
         Condition = {
