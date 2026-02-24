@@ -20,7 +20,7 @@ variable "github_repository" {
 
 variable "github_access_token" {
   type        = string
-  description = "GitHub personal access token for Amplify"
+  description = "GitHub classic personal access token for Amplify"
   sensitive   = true
 }
 
@@ -63,6 +63,18 @@ variable "enable_auto_build" {
   type        = bool
   description = "Enable auto build on push"
   default     = true
+}
+
+variable "enable_preview" {
+  type        = bool
+  description = "Enable preview builds for pull request branches"
+  default     = true
+}
+
+variable "preview_branch_patterns" {
+  type        = list(string)
+  description = "Branch patterns for auto branch creation (preview)"
+  default     = ["*"]
 }
 
 variable "tags" {

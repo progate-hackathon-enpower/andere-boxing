@@ -10,6 +10,20 @@ resource "aws_amplify_app" "main" {
 
   environment_variables = var.environment_variables
 
+  enable_branch_auto_build = true
+
+  enable_auto_branch_creation   = var.enable_preview
+  auto_branch_creation_patterns = var.enable_preview ? var.preview_branch_patterns : []
+
+  dynamic "auto_branch_creation_config" {
+    for_each = var.enable_preview ? [1] : []
+    content {
+      enable_auto_build = true
+      framework         = var.framework
+      stage             = "PULL_REQUEST"
+    }
+  }
+
   custom_rule {
     source = "/<*>"
     status = "404-200"

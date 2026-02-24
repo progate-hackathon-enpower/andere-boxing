@@ -2,7 +2,7 @@ aws_region        = "ap-northeast-1"
 environment       = "staging"
 project_name      = "andere-boxing"
 github_repository        = "progate-hackathon-enpower/andere-boxing"
-github_token_secret_name = "andere-boxing/github-access-token"
+github_token_secret_name       = "andere-boxing/github-access-token"
 dotenv_private_key_secret_name = "andere-boxing/dotenv-private-key"
 
 # Amplify Configuration

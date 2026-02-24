@@ -21,7 +21,7 @@ variable "github_repository" {
 
 variable "github_token_secret_name" {
   type        = string
-  description = "Secrets Manager secret name for GitHub access token"
+  description = "Secrets Manager secret name for GitHub classic token"
   default     = "andere-boxing/github-access-token"
 }
 
