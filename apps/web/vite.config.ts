@@ -1,33 +1,33 @@
-import { defineConfig } from 'vite'
-import { devtools } from '@tanstack/devtools-vite'
-import { tanstackStart } from '@tanstack/react-start/plugin/vite'
-import viteReact from '@vitejs/plugin-react'
-import viteTsConfigPaths from 'vite-tsconfig-paths'
-import { fileURLToPath, URL } from 'url'
-import { nitro } from 'nitro/vite'
-import tailwindcss from '@tailwindcss/vite'
-import { cloudflare } from "@cloudflare/vite-plugin";
-
+import { defineConfig } from "vite";
+import { devtools } from "@tanstack/devtools-vite";
+import { tanstackStart } from "@tanstack/react-start/plugin/vite";
+import viteReact from "@vitejs/plugin-react";
+import viteTsConfigPaths from "vite-tsconfig-paths";
+import { fileURLToPath, URL } from "url";
+import { nitro } from "nitro/vite";
+import tailwindcss from "@tailwindcss/vite";
 
 const config = defineConfig({
   resolve: {
     alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url)),
+      "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  ssr: {
+    // PixiJS はブラウザ専用のため、Vite に直接バンドルさせて
+    // Node.js の ESM 拡張子解決エラーを回避する
+    noExternal: ["@pixi/react", "pixi.js"],
+  },
   plugins: [
-    cloudflare({ viteEnvironment: { name: "ssr" } }),
     devtools(),
     nitro(),
-    // this is the plugin that enables path aliases
     viteTsConfigPaths({
-      projects: ['./tsconfig.json'],
+      projects: ["./tsconfig.json"],
     }),
-
     tanstackStart(),
     viteReact(),
-    tailwindcss()
+    tailwindcss(),
   ],
-})
+});
 
-export default config
+export default config;

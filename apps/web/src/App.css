@@ -1,1 +1,37 @@
-@import 'tailwindcss' source('./');
+@import "tailwindcss" source("./");
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.game-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* PixiJS canvas を最背面に配置 */
+.pixi-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+.pixi-layer canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* React UI を PixiJS の前面にオーバーレイ */
+.ui-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}

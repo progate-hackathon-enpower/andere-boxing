@@ -14,7 +14,7 @@ export interface GameServer {
     labels?: Record<string, string>;
   };
   status: {
-    state: 'Ready' | 'Allocated' | 'Shutdown' | 'Error';
+    state: "Ready" | "Allocated" | "Shutdown" | "Error";
     address: string;
     ports: GameServerPort[];
   };
@@ -31,8 +31,8 @@ export class AgonesClient {
   private namespace: string;
 
   constructor(options: { baseUrl: string; namespace?: string }) {
-    this.baseUrl = options.baseUrl.replace(/\/$/, '');
-    this.namespace = options.namespace ?? 'default';
+    this.baseUrl = options.baseUrl.replace(/\/$/, "");
+    this.namespace = options.namespace ?? "default";
   }
 
   /**
@@ -40,13 +40,13 @@ export class AgonesClient {
    */
   async allocateForRoom(roomId: string): Promise<AllocationResponse> {
     const response = await fetch(`${this.baseUrl}/gameserverallocation`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         namespace: this.namespace,
-        gameServerSelectors: [{ gameServerState: 'Ready' }],
+        gameServerSelectors: [{ gameServerState: "Ready" }],
         metadata: {
-          labels: { 'agones.dev/room-id': roomId },
+          labels: { "agones.dev/room-id": roomId },
         },
       }),
     });
@@ -64,7 +64,7 @@ export class AgonesClient {
   async findServerByRoomId(roomId: string): Promise<GameServer | null> {
     const response = await fetch(
       `${this.baseUrl}/namespaces/${this.namespace}/gameservers?labelSelector=agones.dev/room-id=${roomId}`,
-      { headers: { 'Content-Type': 'application/json' } }
+      { headers: { "Content-Type": "application/json" } },
     );
 
     if (!response.ok) {
@@ -73,6 +73,6 @@ export class AgonesClient {
 
     const data = await response.json();
     const servers: GameServer[] = data.items ?? [];
-    return servers.find(s => s.status.state === 'Allocated') ?? null;
+    return servers.find((s) => s.status.state === "Allocated") ?? null;
   }
 }
