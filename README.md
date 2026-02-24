@@ -24,7 +24,7 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
   <img src="https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white" alt="TypeScript" />
   <img src="https://img.shields.io/badge/Vite_7-646CFF?logo=vite&logoColor=white" alt="Vite" />
   <img src="https://img.shields.io/badge/Tailwind_CSS_4-06B6D4?logo=tailwindcss&logoColor=white" alt="TailwindCSS" />
-  <img src="https://img.shields.io/badge/Cloudflare_Workers-F38020?logo=cloudflare&logoColor=white" alt="Cloudflare" />
+  <img src="https://img.shields.io/badge/PixiJS_8-E72264?logo=pixijs&logoColor=white" alt="PixiJS" />
   <img src="https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white" alt="Kubernetes" />
   <img src="https://img.shields.io/badge/Docker-2496ED?logo=docker&logoColor=white" alt="Docker" />
 </p>
@@ -45,8 +45,8 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 |---|---|---|
 | iOS / watchOS | Swift / SwiftUI | - |
 | 同期サーバー | Rust / wtransport / Tokio / prost | Edition 2024 |
-| Web | React / TanStack Start / Vite / Tailwind CSS | 19 / 1.132 / 7 / 4 |
-| インフラ | Kubernetes / Agones / ArgoCD / Cloudflare Workers | - |
+| Web | React / TanStack Start / Vite / Tailwind CSS / PixiJS | 19 / 1.132 / 7 / 4 / 8 |
+| インフラ | Kubernetes / Agones / ArgoCD | - |
 
 ## ディレクトリ構成
 
