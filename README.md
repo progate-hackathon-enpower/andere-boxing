@@ -44,7 +44,7 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 | カテゴリ | 技術 | バージョン |
 |---|---|---|
 | iOS / watchOS | Swift / SwiftUI | - |
-| 同期サーバー | Rust / wtransport / Tokio / prost | Edition 2024 |
+| 同期サーバー | Rust / wtransport / Tokio / prost / Agones SDK | Edition 2021 / wtransport 0.6 |
 | Web | React / TanStack Start / Vite / Tailwind CSS | 19 / 1.132 / 7 / 4 |
 | インフラ | Kubernetes / Agones / ArgoCD / Cloudflare Workers | - |
 
@@ -65,9 +65,10 @@ infra/
 
 ### 前提条件
 
-- Rust (Edition 2024)
+- Rust (Edition 2021)
 - Node.js + pnpm
 - Xcode (iOS / watchOS ビルド用)
+- Protocol Buffers コンパイラ (sync-server ビルド用)
 
 ### sync-server
 
@@ -91,3 +92,5 @@ pnpm dev
 | `AGONES_ALLOCATOR_HOST` | Agones Allocator のホスト | - |
 | `AGONES_ALLOCATOR_PORT` | Agones Allocator のポート | - |
 | `DISCORD_WEBHOOK_URL` | Discord 通知用 Webhook URL | - |
+| `CERT` | sync-server の TLS 証明書 (PEM 形式) | - |
+| `KEY` | sync-server の TLS 秘密鍵 (PEM 形式) | - |
