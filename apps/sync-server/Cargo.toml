@@ -1,11 +1,11 @@
 [package]
 name = "sync-server"
 version = "0.1.0"
-edition = "2024"
+edition = "2021"
 
 [dependencies]
 prost = "0.13"
-wtransport = "0.5"
+wtransport = "0.6"
 tokio = { version = "1", features = ["full"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"
@@ -13,3 +13,5 @@ anyhow = "1"
 dashmap = "6"
 bytes = "1"
 futures = "0.3"
+agones = "1.43"
+pem = "3"
