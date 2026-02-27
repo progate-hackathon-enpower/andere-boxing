@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { andere_boxing } from "../generated/event_pb";
 import type { PlayerAction } from "../game/types";
 
 /**
@@ -8,8 +9,10 @@ import type { PlayerAction } from "../game/types";
  *   左プレイヤー (Player 0): a = punch / s = defend
  *   右プレイヤー (Player 1): k = punch / l = defend
  *
- * sync-server 導入時は、同じ PlayerAction を返す別フックに差し替えるだけでよい。
+ * sync-server 導入時は、同じ PlayerAction (UserAction | null) を返す別フックに差し替えるだけでよい。
  */
+
+const { UserAction } = andere_boxing;
 
 type KeyMap = {
   punch: string;
@@ -36,8 +39,8 @@ export function useKeyboard() {
     const keys = KEY_MAP[playerIndex];
     const justPressed = justPressedRef.current;
 
-    if (justPressed.has(keys.punch)) return "punch";
-    if (justPressed.has(keys.defend)) return "defend";
+    if (justPressed.has(keys.punch)) return UserAction.USER_ACTION_PUNCH;
+    if (justPressed.has(keys.defend)) return UserAction.USER_ACTION_DEFEND;
     return null;
   };
 

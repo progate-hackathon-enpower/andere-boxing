@@ -1,3 +1,7 @@
+import { andere_boxing } from "../generated/event_pb";
+
+export { andere_boxing };
+
 export type AnimState = "idle" | "punch" | "defend" | "hurt" | "ko";
 
 export type PlayerState = {
@@ -23,8 +27,8 @@ export type GameState = {
 };
 
 /**
- * プレイヤーのアクション。
- * キーボード (useKeyboard) と sync-server (useWatchActions) の両方でこの型を返す。
- * 入力層を差し替えてもゲームロジックを変更する必要がない。
+ * プレイヤーのアクション。proto の UserAction をそのまま使用する。
+ * キーボード (useKeyboard) と sync-server どちらの入力層でも同じ型を返す。
+ * null は「このフレームで入力なし」を表す。
  */
-export type PlayerAction = "punch" | "defend" | null;
+export type PlayerAction = andere_boxing.UserAction | null;
