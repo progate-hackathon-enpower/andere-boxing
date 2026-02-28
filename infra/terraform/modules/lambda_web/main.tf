@@ -35,7 +35,7 @@ resource "aws_iam_policy" "eks_access" {
     Statement = [
       {
         Effect   = "Allow"
-        Action   = ["eks:DescribeCluster"]
+        Action   = ["eks:DescribeCluster", "sts:GetCallerIdentity"]
         Resource = "*"
       }
     ]
@@ -69,6 +69,17 @@ resource "aws_security_group" "lambda" {
   )
 }
 
+# Allow Lambda to access EKS Cluster API
+resource "aws_security_group_rule" "lambda_to_eks_cluster" {
+  type                     = "ingress"
+  from_port                = 443
+  to_port                  = 443
+  protocol                 = "tcp"
+  security_group_id        = var.eks_cluster_security_group_id
+  source_security_group_id = aws_security_group.lambda.id
+  description              = "Allow Lambda to access EKS Kubernetes API"
+}
+
 data "archive_file" "dummy" {
   type        = "zip"
   output_path = "${path.module}/dummy.zip"
@@ -99,7 +110,9 @@ resource "aws_lambda_function" "web" {
 
   environment {
     variables = {
-      NODE_ENV = "production"
+      NODE_ENV         = "production"
+      EKS_CLUSTER_NAME = "andere-boxing-cluster"
+      AGONES_NAMESPACE = "sync-server"
     }
   }
 

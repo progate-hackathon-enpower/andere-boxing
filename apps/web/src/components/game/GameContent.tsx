@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { useGameLoop } from "../../hooks/useGameLoop";
+import { useGameState } from "../../contexts/GameContext";
 import { Dogo } from "./Dogo";
 import { Fighter } from "./Fighter";
 import { Stand } from "./Stand";
@@ -10,15 +11,16 @@ import { Stand } from "./Stand";
  * GameStage から React.lazy で遅延ロードし SSR のモジュールグラフに入れない。
  */
 export default function GameContent() {
+  const { gameStateRef } = useGameState();
   const { getAction, flushActions } = useKeyboard();
-  const gameStateRef = useGameLoop({ getAction, flushActions });
+  useGameLoop({ getAction, flushActions, stateRef: gameStateRef });
 
   const getLeftAnimState = useCallback(
-    () => gameStateRef.current.players[0].animState,
+    () => gameStateRef.current?.players[0].animState ?? "idle",
     [gameStateRef],
   );
   const getRightAnimState = useCallback(
-    () => gameStateRef.current.players[1].animState,
+    () => gameStateRef.current?.players[1].animState ?? "idle",
     [gameStateRef],
   );
 
