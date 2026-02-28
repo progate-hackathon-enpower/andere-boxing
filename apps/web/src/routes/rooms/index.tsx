@@ -26,15 +26,12 @@ export const Route = createFileRoute("/rooms/")({
             { status: 201 },
           );
         } catch (error) {
-          return Response.json(
-            {
-              error:
-                error instanceof Error
-                  ? error.message
-                  : "Failed to allocate server",
-            },
-            { status: 500 },
-          );
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to allocate server";
+          console.error("POST /rooms error:", message, error);
+          return Response.json({ error: message }, { status: 500 });
         }
       },
     },

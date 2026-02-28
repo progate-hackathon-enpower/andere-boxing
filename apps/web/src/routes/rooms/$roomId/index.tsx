@@ -27,15 +27,10 @@ export const Route = createFileRoute("/rooms/$roomId/")({
             port: server.port,
           });
         } catch (error) {
-          return Response.json(
-            {
-              error:
-                error instanceof Error
-                  ? error.message
-                  : "Failed to find server",
-            },
-            { status: 500 },
-          );
+          const message =
+            error instanceof Error ? error.message : "Failed to find server";
+          console.error(`GET /rooms/${roomId} error:`, message, error);
+          return Response.json({ error: message }, { status: 500 });
         }
       },
     },
