@@ -1,4 +1,5 @@
 import Foundation
+import Network
 
 // MARK: - WebTransport Message Model
 
@@ -16,16 +17,16 @@ struct WebTransportMessage: Identifiable {
 
 // MARK: - WebTransport Manager
 
-/// Echo サーバーへの接続、データ送受信を管理
-/// URLSession を使用してシンプルな HTTP リクエスト
+/// Network.framework を使用した QUIC/WebTransport 接続管理
 @Observable
+@MainActor
 class WebTransportManager {
     static let shared = WebTransportManager()
 
     // MARK: - 接続状態
     var isConnected = false
     var connectionError: String = ""
-    var serverURL = "https://httpbin.org"  // データを JSON形式でエコーバックする公開API
+    var serverURL = "https://wt-ord.akaleapi.net:6161/echo"  // WebTransport Echo サーバー
     var messageInput: String = ""
 
     // MARK: - メッセージ管理
@@ -33,7 +34,8 @@ class WebTransportManager {
     var receivedMessages: [WebTransportMessage] = []
 
     // MARK: - Private State
-    private var urlSession: URLSession?
+    private var connection: NWConnection?
+    private let connectionQueue = DispatchQueue(label: "com.andere-boxing.webtransport")
 
     // MARK: - Init
     private init() {}
@@ -44,101 +46,89 @@ class WebTransportManager {
         guard !isConnected else { return }
         connectionError = ""
 
-        print("🚀 Echo サーバーへの接続を試行中: \(serverURL)")
+        print("🚀 WebTransport 接続を試行中: \(serverURL)")
 
-        do {
-            // URLSession の作成
-            let config = URLSessionConfiguration.default
-            config.timeoutIntervalForRequest = 10
-            config.timeoutIntervalForResource = 30
-            
-            let session = URLSession(configuration: config)
-            self.urlSession = session
-            
-            // 接続テスト用の簡単なリクエスト
-            let url = URL(string: "\(serverURL)/get")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "GET"
-            request.timeoutInterval = 10
-            
-            print("📡 テストリクエストを送信中...")
-            let (data, response) = try await session.data(for: request)
-            
-            if let httpResponse = response as? HTTPURLResponse {
-                print("📊 ステータスコード: \(httpResponse.statusCode)")
-                
-                if httpResponse.statusCode == 200 {
-                    isConnected = true
-                    addReceivedMessage("✅ Echo server connected")
-                    print("✅ 接続成功")
-                } else {
-                    // ステータスコードが200以外でも接続は成功したと判定
-                    isConnected = true
-                    addReceivedMessage("✅ Echo server connected (Status: \(httpResponse.statusCode))")
-                    print("ℹ️ 接続成功 (Status: \(httpResponse.statusCode))")
+        guard let url = URL(string: serverURL) else {
+            connectionError = "無効なサーバーURL"
+            return
+        }
+
+        guard let host = url.host else {
+            connectionError = "ホスト情報がありません"
+            return
+        }
+
+        let port = url.port ?? 443
+        let endpoint = NWEndpoint.hostPort(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: UInt16(port))!)
+
+        // QUIC パラメータを設定（WebTransport 用の h3 ALPN）
+        var quicOptions = NWProtocolQUIC.Options()
+        quicOptions.alpn = ["h3"]  // HTTP/3 (WebTransport)
+        
+        let parameters = NWParameters(quic: quicOptions)
+
+        let newConnection = NWConnection(to: endpoint, using: parameters)
+        self.connection = newConnection
+
+        newConnection.stateUpdateHandler = { [weak self] (state: NWConnection.State) in
+            Task { @MainActor in
+                switch state {
+                case .ready:
+                    self?.isConnected = true
+                    self?.connectionError = ""
+                    print("✅ WebTransport 接続成功")
+                    self?.receiveLoop()
+                    
+                case .waiting(let error):
+                    self?.connectionError = "接続待機中: \(error)"
+                    print("⏳ 接続待機: \(error)")
+                    
+                case .failed(let error):
+                    self?.isConnected = false
+                    self?.connectionError = "接続失敗: \(error)"
+                    print("❌ 接続エラー: \(error)")
+                    
+                case .cancelled:
+                    self?.isConnected = false
+                    print("🛑 接続キャンセル")
+                    
+                @unknown default:
+                    break
                 }
             }
-            
-        } catch {
-            connectionError = "接続失敗: \(error.localizedDescription)"
-            isConnected = false
-            print("❌ 接続エラー: \(error)")
         }
+
+        newConnection.start(queue: connectionQueue)
     }
 
     func disconnect() async {
-        urlSession?.invalidateAndCancel()
-        urlSession = nil
-        
+        connection?.cancel()
+        connection = nil
         isConnected = false
         connectionError = ""
-        addReceivedMessage("⏹️ Echo server disconnected")
+        print("🛑 WebTransport 接続を切断")
     }
 
     func sendMessage(_ message: String) async {
         guard !message.isEmpty else { return }
-        guard isConnected, let session = urlSession else {
+        guard isConnected, let connection = connection else {
             connectionError = "未接続です"
             return
         }
 
-        do {
-            addSentMessage(message)
-            print("📤 メッセージを送信中: \(message)")
-            
-            // POST リクエストでメッセージを送信
-            let url = URL(string: "\(serverURL)/post")!
-            var request = URLRequest(url: url)
-            request.httpMethod = "POST"
-            request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
-            
-            // ボディデータを準備（httpbin は form-encoded を期待）
-            let bodyString = "message=\(message.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "")"
-            request.httpBody = bodyString.data(using: .utf8)
-            
-            let (data, response) = try await session.data(for: request)
-            
-            if let httpResponse = response as? HTTPURLResponse,
-               httpResponse.statusCode == 200 {
-                // httpbin のレスポンスを解析
-                if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let form = json["form"] as? [String: String],
-                   let echo = form["message"] {
-                    addReceivedMessage("Echo: \(echo)")
-                    print("📥 エコー応答受信: \(echo)")
-                } else {
-                    // JSON に message が含まれていない場合
-                    addReceivedMessage("Echo: \(message)")
-                    print("📥 エコー応答受信: \(message)")
+        let data = Data(message.utf8)
+        addSentMessage(message)
+        
+        print("📤 WebTransport メッセージ送信: \(message)")
+        
+        connection.send(content: data, completion: .contentProcessed { [weak self] error in
+            if let error = error {
+                Task { @MainActor in
+                    self?.connectionError = "送信失敗: \(error)"
+                    print("❌ 送信エラー: \(error)")
                 }
-            } else {
-                connectionError = "送信失敗: サーバーエラー"
             }
-            
-        } catch {
-            connectionError = "送受信失敗: \(error.localizedDescription)"
-            print("❌ 送信エラー: \(error)")
-        }
+        })
     }
 
     // MARK: - Helper Methods
@@ -164,6 +154,36 @@ class WebTransportManager {
     func clearHistory() {
         sentMessages.removeAll()
         receivedMessages.removeAll()
+    }
+
+    // MARK: - Receive Loop
+
+    private func receiveLoop() {
+        guard let connection = connection else { return }
+        
+        connection.receive(minimumIncompleteLength: 1, maximumLength: 64 * 1024) { [weak self] data, _, isComplete, error in
+            guard let self = self else { return }
+            
+            Task { @MainActor in
+                if let data = data, !data.isEmpty {
+                    if let message = String(data: data, encoding: .utf8) {
+                        self.addReceivedMessage(message)
+                        print("📥 WebTransport 受信: \(message)")
+                    }
+                }
+                
+                if let error = error {
+                    self.connectionError = "受信エラー: \(error)"
+                    print("❌ 受信エラー: \(error)")
+                    self.isConnected = false
+                    return
+                }
+                
+                if !isComplete {
+                    self.receiveLoop()
+                }
+            }
+        }
     }
 }
 
