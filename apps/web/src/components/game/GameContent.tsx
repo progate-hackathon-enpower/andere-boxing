@@ -4,6 +4,7 @@ import { useTick } from "@pixi/react";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { useGameLoop } from "../../hooks/useGameLoop";
 import { useGameState } from "../../contexts/GameContext";
+import { Dogo } from "./Dogo";
 import { Fighter } from "./Fighter";
 import { Stand } from "./Stand";
 
@@ -40,7 +41,9 @@ export default function GameContent() {
 
   return (
     <>
-      {/* Fighter → Stand の順で描画（Stand がファイターより手前に表示される）*/}
+      {/* Dogo → Fighter → Stand の順で描画（Dogo が最背後、Stand が最前面）*/}
+      <Dogo side="left" getAnimState={getLeftAnimState} />
+      <Dogo side="right" getAnimState={getRightAnimState} />
       <Fighter side="left" getAnimState={getLeftAnimState} />
       <Fighter side="right" getAnimState={getRightAnimState} />
       <Stand side="left" getAnimState={getLeftAnimState} />
