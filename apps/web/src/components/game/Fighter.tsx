@@ -1,5 +1,6 @@
 import { extend } from "@pixi/react";
 import { Graphics } from "pixi.js";
+import { useCallback, useEffect, useState } from "react";
 import type { AnimState } from "../../game/types";
 
 extend({ Graphics });
@@ -21,17 +22,34 @@ const ANIM_COLOR: Record<AnimState, number> = {
 };
 
 export function Fighter({ side, animState }: Props) {
-  const x =
-    side === "left" ? window.innerWidth * 0.25 : window.innerWidth * 0.75;
-  const y = window.innerHeight * 0.85;
+  const [size, setSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const onResize = () => {
+      setSize({ width: window.innerWidth, height: window.innerHeight });
+    };
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
+  }, []);
+
+  const x = side === "left" ? size.width * 0.25 : size.width * 0.75;
+  const y = size.height * 0.85;
+
+  const draw = useCallback(
+    (g: Graphics) => {
+      g.clear();
+      g.rect(0, 0, FIGHTER_WIDTH, FIGHTER_HEIGHT);
+      g.fill(ANIM_COLOR[animState]);
+    },
+    [animState],
+  );
 
   return (
     <pixiGraphics
-      draw={(g: Graphics) => {
-        g.clear();
-        g.rect(0, 0, FIGHTER_WIDTH, FIGHTER_HEIGHT);
-        g.fill(ANIM_COLOR[animState]);
-      }}
+      draw={draw}
       x={x}
       y={y}
       pivot={{ x: FIGHTER_WIDTH / 2, y: FIGHTER_HEIGHT }}
