@@ -6,7 +6,7 @@ import type { AnimState } from "./types";
 const COL_X = [0, 171, 341, 512, 682]; // 各列の開始 x
 const COL_W = [170, 169, 170, 169, 169]; // 各列の幅
 const ROW_Y = [0, 205, 410, 615, 820]; // 各行の開始 y
-const ROW_H = 204; // 全行で共通の高さ
+const ROW_H = 194; // 全行で共通の高さ（足元を 10px トリム）
 
 /** 各 AnimState のコマ数（全状態で共通）*/
 export const FRAME_COUNT = COL_X.length;
