@@ -166,3 +166,111 @@ class WebTransportManager {
         receivedMessages.removeAll()
     }
 }
+
+// MARK: - Protocol Buffers サポート
+// ⚠️ この extension を使用するには、SwiftProtobuf パッケージと Generated/event.pb.swift を
+//    Xcode プロジェクトに追加する必要があります。
+//    詳細は PROTOBUF_SETUP.md を参照してください。
+
+/*
+import SwiftProtobuf
+
+extension WebTransportManager {
+    /// Protocol Buffers メッセージを送信
+    func sendEvent(_ event: AndereBoxing_NetworkEvent) async {
+        guard isConnected else {
+            connectionError = "未接続です"
+            return
+        }
+        
+        do {
+            // Protocol Buffers メッセージをバイナリにシリアライズ
+            let data = try event.serializedData()
+            
+            // Base64 エンコードして送信（HTTPBin は JSON/テキストを期待するため）
+            let base64String = data.base64EncodedString()
+            
+            // イベント情報をログ用に抽出
+            var eventType = "Unknown"
+            if event.hasUserAction {
+                eventType = "UserAction: \(event.userAction)"
+            } else if event.hasRoomAction {
+                eventType = "RoomAction: \(event.roomAction)"
+            }
+            
+            addSentMessage("📦 Event: \(eventType) [roomID: \(event.roomID)]")
+            print("📤 Protocol Buffers イベントを送信中: \(eventType)")
+            
+            // POST リクエストでバイナリデータを送信
+            let url = URL(string: "\(serverURL)/post")!
+            var request = URLRequest(url: url)
+            request.httpMethod = "POST"
+            request.setValue("application/octet-stream", forHTTPHeaderField: "Content-Type")
+            request.httpBody = data
+            
+            let (responseData, response) = try await urlSession!.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse,
+               httpResponse.statusCode == 200 {
+                // httpbin のレスポンスからエコーバックされたデータを解析
+                if let json = try JSONSerialization.jsonObject(with: responseData) as? [String: Any],
+                   let echoData = json["data"] as? String,
+                   let decodedData = Data(base64Encoded: echoData) {
+                    
+                    // エコーバックされたデータを Protocol Buffers としてデシリアライズ
+                    let echoEvent = try AndereBoxing_NetworkEvent(serializedData: decodedData)
+                    
+                    var receivedEventType = "Unknown"
+                    if echoEvent.hasUserAction {
+                        receivedEventType = "UserAction: \(echoEvent.userAction)"
+                    } else if echoEvent.hasRoomAction {
+                        receivedEventType = "RoomAction: \(echoEvent.roomAction)"
+                    }
+                    
+                    addReceivedMessage("📦 Echo Event: \(receivedEventType) [roomID: \(echoEvent.roomID)]")
+                    print("📥 Protocol Buffers エコー応答受信: \(receivedEventType)")
+                }
+            } else {
+                connectionError = "送信失敗: サーバーエラー"
+            }
+            
+        } catch {
+            connectionError = "Protocol Buffers 送受信失敗: \(error.localizedDescription)"
+            print("❌ Protocol Buffers エラー: \(error)")
+        }
+    }
+    
+    /// パンチアクションを送信するヘルパー
+    func sendPunchAction(roomID: String, userID: String) async {
+        var event = AndereBoxing_NetworkEvent()
+        event.roomID = roomID
+        event.userID = userID
+        event.timestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        event.userAction = .punch
+        
+        await sendEvent(event)
+    }
+    
+    /// ディフェンドアクションを送信するヘルパー
+    func sendDefendAction(roomID: String, userID: String) async {
+        var event = AndereBoxing_NetworkEvent()
+        event.roomID = roomID
+        event.userID = userID
+        event.timestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        event.userAction = .defend
+        
+        await sendEvent(event)
+    }
+    
+    /// ルーム作成アクションを送信するヘルパー
+    func sendCreateRoomAction(roomID: String, userID: String) async {
+        var event = AndereBoxing_NetworkEvent()
+        event.roomID = roomID
+        event.userID = userID
+        event.timestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        event.roomAction = .create
+        
+        await sendEvent(event)
+    }
+}
+*/

@@ -68,6 +68,20 @@ infra/
 - Rust (Edition 2024)
 - Node.js + pnpm
 - Xcode (iOS / watchOS ビルド用)
+- Protocol Buffers (protoc + swift-protobuf)
+
+### Protocol Buffers セットアップ
+
+```bash
+# ツールのインストール
+cd apps/proto
+make install-deps
+
+# Swift コードを生成
+make generate
+```
+
+詳細は [apps/andere-boxing/PROTOBUF_SETUP.md](apps/andere-boxing/PROTOBUF_SETUP.md) を参照。
 
 ### sync-server
 
