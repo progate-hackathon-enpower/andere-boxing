@@ -12,7 +12,7 @@ const SPRITE_SCALE = 1.5;
 
 /** ゲームフレーム数とコマ数から animationSpeed を計算する */
 function getAnimSpeed(animState: AnimState): number {
-  if (animState === "idle") return FRAME_COUNT / 30;
+  if (animState === "idle") return FRAME_COUNT / 60;
   return FRAME_COUNT / GAME_CONFIG.animDuration[animState];
 }
 

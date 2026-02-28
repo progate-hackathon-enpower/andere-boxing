@@ -25,34 +25,41 @@ const INITIAL: HudState = {
 type BarProps = {
   value: number;
   max: number;
-  color: string;
+  fillClass: string;
   reverse?: boolean;
 };
 
-function Bar({ value, max, color, reverse = false }: BarProps) {
+function Bar({ value, max, fillClass, reverse = false }: BarProps) {
   const pct = Math.max(0, Math.min(100, (value / max) * 100));
   return (
-    <div className="h-full w-full overflow-hidden rounded-full bg-black/40">
+    <div className="pixel-bar-track">
       <div
-        className={`h-full rounded-full transition-none ${color} ${reverse ? "ml-auto" : ""}`}
+        className={`pixel-bar-fill ${fillClass} ${reverse ? "ml-auto" : ""}`}
         style={{ width: `${pct}%` }}
       />
     </div>
   );
 }
 
+function hpClass(hp: number, maxHp: number): string {
+  const ratio = hp / maxHp;
+  if (ratio > 0.5) return "pixel-bar-fill-hp";
+  if (ratio > 0.25) return "pixel-bar-fill-hp-warn";
+  return "pixel-bar-fill-hp-danger";
+}
+
 export function HUD() {
   const { gameStateRef } = useGameState();
   const [hud, setHud] = useState<HudState>(INITIAL);
-  const [barHeights, setBarHeights] = useState({ hp: 20, stamina: 12 });
+  const [barHeights, setBarHeights] = useState({ hp: 28, stamina: 10 });
 
   useEffect(() => {
     const updateHeights = () => {
       const height = window.innerHeight;
       // 1080p を基準に、相対的にバーの高さを計算
       const scale = height / 1080;
-      const hpHeight = Math.max(16, Math.min(48, 20 * scale));
-      const staminaHeight = Math.max(12, Math.min(36, 12 * scale));
+      const hpHeight = Math.max(20, Math.min(56, 28 * scale));
+      const staminaHeight = Math.max(8, Math.min(24, 10 * scale));
 
       setBarHeights({
         hp: hpHeight,
@@ -107,31 +114,35 @@ export function HUD() {
   return (
     <div className="pointer-events-none absolute inset-x-0 top-0 flex items-start gap-4 p-4">
       {/* 左プレイヤー */}
-      <div className="flex flex-1 flex-col gap-1.5">
+      <div className="flex flex-1 flex-col gap-2">
         <div style={{ height: `${barHeights.hp}px` }}>
-          <Bar value={hud.p0Hp} max={hud.p0MaxHp} color="bg-green-400" />
+          <Bar
+            value={hud.p0Hp}
+            max={hud.p0MaxHp}
+            fillClass={hpClass(hud.p0Hp, hud.p0MaxHp)}
+          />
         </div>
         <div style={{ height: `${barHeights.stamina}px` }}>
           <Bar
             value={hud.p0Stamina}
             max={GAME_CONFIG.stamina.max}
-            color="bg-yellow-400"
+            fillClass="pixel-bar-fill-stamina"
           />
         </div>
       </div>
 
       {/* タイマー（中央） */}
-      <div className="shrink-0 text-center [font-size:clamp(1rem,3.7vh,4rem)] font-bold text-white drop-shadow-lg">
+      <div className="pixel-timer shrink-0 text-center [font-size:clamp(0.8rem,3.7vh,3.5rem)] text-white">
         {hud.timer}
       </div>
 
       {/* 右プレイヤー（バーを右端から伸ばす） */}
-      <div className="flex flex-1 flex-col gap-1.5">
+      <div className="flex flex-1 flex-col gap-2">
         <div style={{ height: `${barHeights.hp}px` }}>
           <Bar
             value={hud.p1Hp}
             max={hud.p1MaxHp}
-            color="bg-green-400"
+            fillClass={hpClass(hud.p1Hp, hud.p1MaxHp)}
             reverse
           />
         </div>
@@ -139,7 +150,7 @@ export function HUD() {
           <Bar
             value={hud.p1Stamina}
             max={GAME_CONFIG.stamina.max}
-            color="bg-yellow-400"
+            fillClass="pixel-bar-fill-stamina"
             reverse
           />
         </div>

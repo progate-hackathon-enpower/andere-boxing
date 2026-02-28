@@ -35,3 +35,151 @@ body {
   inset: 0;
   z-index: 1;
 }
+
+/* ========== ドット絵 UI スタイル ========== */
+
+/* ドット絵タイトル */
+.pixel-title {
+  font-family: "Press Start 2P", "DotGothic16", monospace;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  text-shadow:
+    4px 4px 0 rgba(0, 0, 0, 0.9),
+    8px 8px 0 rgba(0, 0, 0, 0.4);
+  line-height: 1.6;
+  letter-spacing: 0.05em;
+}
+
+/* ドット絵テキスト（日本語対応） */
+.pixel-text {
+  font-family: "DotGothic16", monospace;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+  letter-spacing: 0.05em;
+}
+
+/* ドット絵ボタン共通 */
+.pixel-btn {
+  font-family: "DotGothic16", monospace;
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #fff;
+  border-width: 3px;
+  border-style: solid;
+  padding: 14px 32px;
+  cursor: pointer;
+  position: relative;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  letter-spacing: 0.08em;
+  border-radius: 0;
+  display: inline-block;
+  text-decoration: none;
+  transition:
+    transform 0.06s,
+    box-shadow 0.06s;
+  user-select: none;
+}
+
+/* 紫ボタン */
+.pixel-btn-purple {
+  background: #6d28d9;
+  border-color: #a78bfa #3b0764 #3b0764 #a78bfa;
+  box-shadow:
+    0 7px 0 #1e0647,
+    inset 0 2px 0 #c4b5fd;
+}
+.pixel-btn-purple:hover {
+  transform: translateY(3px);
+  box-shadow:
+    0 4px 0 #1e0647,
+    inset 0 2px 0 #c4b5fd;
+}
+.pixel-btn-purple:active {
+  transform: translateY(7px);
+  box-shadow:
+    0 0 0 #1e0647,
+    inset 0 2px 0 #c4b5fd;
+}
+
+/* ========== ドット絵 HUD バー ========== */
+
+/* バー外枠 */
+.pixel-bar-track {
+  border: 3px solid #111827;
+  border-radius: 0;
+  overflow: hidden;
+  background: #111827;
+  box-shadow:
+    inset 2px 2px 0 rgba(0, 0, 0, 0.7),
+    3px 3px 0 rgba(0, 0, 0, 0.5);
+  width: 100%;
+  height: 100%;
+}
+
+/* バー本体共通 */
+.pixel-bar-fill {
+  height: 100%;
+  position: relative;
+  transition: width 0.08s;
+}
+.pixel-bar-fill::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 35%;
+  background: rgba(255, 255, 255, 0.25);
+  pointer-events: none;
+}
+
+/* HP 通常（ピンク） */
+.pixel-bar-fill-hp {
+  background: linear-gradient(to bottom, #f9a8d4 0%, #ec4899 50%, #9d174d 100%);
+}
+/* HP 注意（オレンジ） */
+.pixel-bar-fill-hp-warn {
+  background: linear-gradient(to bottom, #fdba74 0%, #f97316 50%, #9a3412 100%);
+}
+/* HP 危険（赤） */
+.pixel-bar-fill-hp-danger {
+  background: linear-gradient(to bottom, #fca5a5 0%, #ef4444 50%, #7f1d1d 100%);
+}
+/* スタミナ（白） */
+.pixel-bar-fill-stamina {
+  background: linear-gradient(to bottom, #ffffff 0%, #e2e8f0 50%, #94a3b8 100%);
+}
+
+/* タイマー */
+.pixel-timer {
+  font-family: "Press Start 2P", monospace;
+  -webkit-font-smoothing: none;
+  font-smooth: never;
+  text-shadow:
+    3px 3px 0 rgba(0, 0, 0, 0.9),
+    6px 6px 0 rgba(0, 0, 0, 0.4);
+  line-height: 1;
+}
+
+/* 緑ボタン */
+.pixel-btn-green {
+  background: #15803d;
+  border-color: #4ade80 #14532d #14532d #4ade80;
+  box-shadow:
+    0 7px 0 #052e16,
+    inset 0 2px 0 #86efac;
+}
+.pixel-btn-green:hover {
+  transform: translateY(3px);
+  box-shadow:
+    0 4px 0 #052e16,
+    inset 0 2px 0 #86efac;
+}
+.pixel-btn-green:active {
+  transform: translateY(7px);
+  box-shadow:
+    0 0 0 #052e16,
+    inset 0 2px 0 #86efac;
+}
