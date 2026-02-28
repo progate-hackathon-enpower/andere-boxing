@@ -26,6 +26,7 @@
 
 ## インフラ
 
+
 ## ML
 
 
@@ -50,6 +51,13 @@
 
 `report` ラベルをトリガーに Discord へ自動配信する仕組みも組み合わせた：
 ![image](https://ptera-publish.topaz.dev/project/01KHRCRH948110PBWG5H1M4YG6.png)
+
+## CI/CD
+### TopazのCD <=NEW!!!!
+topazのmdを、actionsで指定したmdの内容で置き換え自動更新する仕組みを作成しました。
+
+topazの認証フローを理解し、actionsのflowとして公開しています。
+[詳しくはこちら](https://github.com/mono0218/topaz-md-cicd)
 
 
 # 技術的挑戦
