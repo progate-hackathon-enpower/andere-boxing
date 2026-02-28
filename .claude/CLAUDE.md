@@ -18,5 +18,10 @@
 
 ## Git 規約
 
-- コミットメッセージは英語、`feat:` / `fix:` / `update:` / `chore:` などの prefix を付ける
+- コミットメッセージは日本語、`feat:` / `fix:` / `update:` / `chore:` などの prefix を付ける
 - PR は短いタイトル + Summary セクションで変更内容を説明する
+
+## Issue 管理
+
+- ユーザーと将来のタスクについて話し合う場面では、**issue を立てるかどうかを積極的に提案する**
+- issue 作成の作法は [.claude/rules/issue.md](.claude/rules/issue.md) を参照すること
