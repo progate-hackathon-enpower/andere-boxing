@@ -22,6 +22,7 @@ const config = defineConfig({
     devtools(),
     nitro({
       preset: process.env.NITRO_PRESET || "node-server",
+      serveStatic: true,
     }),
     viteTsConfigPaths({
       projects: ["./tsconfig.json"],
