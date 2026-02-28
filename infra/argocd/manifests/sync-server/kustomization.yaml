@@ -8,3 +8,4 @@ resources:
   - resources/gameserver.yaml
   - resources/clusterissuer.yaml
   - resources/certificate.yaml
+  - resources/autoscaler.yaml

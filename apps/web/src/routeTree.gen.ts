@@ -9,28 +9,10 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as ResultRouteImport } from "./routes/result";
-import { Route as LobbyRouteImport } from "./routes/lobby";
-import { Route as GameRouteImport } from "./routes/game";
 import { Route as IndexRouteImport } from "./routes/index";
 import { Route as RoomsIndexRouteImport } from "./routes/rooms/index";
 import { Route as RoomsRoomIdIndexRouteImport } from "./routes/rooms/$roomId/index";
 
-const ResultRoute = ResultRouteImport.update({
-  id: "/result",
-  path: "/result",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const LobbyRoute = LobbyRouteImport.update({
-  id: "/lobby",
-  path: "/lobby",
-  getParentRoute: () => rootRouteImport,
-} as any);
-const GameRoute = GameRouteImport.update({
-  id: "/game",
-  path: "/game",
-  getParentRoute: () => rootRouteImport,
-} as any);
 const IndexRoute = IndexRouteImport.update({
   id: "/",
   path: "/",
@@ -49,82 +31,36 @@ const RoomsRoomIdIndexRoute = RoomsRoomIdIndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   "/": typeof IndexRoute;
-  "/game": typeof GameRoute;
-  "/lobby": typeof LobbyRoute;
-  "/result": typeof ResultRoute;
   "/rooms/": typeof RoomsIndexRoute;
   "/rooms/$roomId/": typeof RoomsRoomIdIndexRoute;
 }
 export interface FileRoutesByTo {
   "/": typeof IndexRoute;
-  "/game": typeof GameRoute;
-  "/lobby": typeof LobbyRoute;
-  "/result": typeof ResultRoute;
   "/rooms": typeof RoomsIndexRoute;
   "/rooms/$roomId": typeof RoomsRoomIdIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
   "/": typeof IndexRoute;
-  "/game": typeof GameRoute;
-  "/lobby": typeof LobbyRoute;
-  "/result": typeof ResultRoute;
   "/rooms/": typeof RoomsIndexRoute;
   "/rooms/$roomId/": typeof RoomsRoomIdIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths:
-    | "/"
-    | "/game"
-    | "/lobby"
-    | "/result"
-    | "/rooms/"
-    | "/rooms/$roomId/";
+  fullPaths: "/" | "/rooms/" | "/rooms/$roomId/";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/" | "/game" | "/lobby" | "/result" | "/rooms" | "/rooms/$roomId";
-  id:
-    | "__root__"
-    | "/"
-    | "/game"
-    | "/lobby"
-    | "/result"
-    | "/rooms/"
-    | "/rooms/$roomId/";
+  to: "/" | "/rooms" | "/rooms/$roomId";
+  id: "__root__" | "/" | "/rooms/" | "/rooms/$roomId/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute;
-  GameRoute: typeof GameRoute;
-  LobbyRoute: typeof LobbyRoute;
-  ResultRoute: typeof ResultRoute;
   RoomsIndexRoute: typeof RoomsIndexRoute;
   RoomsRoomIdIndexRoute: typeof RoomsRoomIdIndexRoute;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/result": {
-      id: "/result";
-      path: "/result";
-      fullPath: "/result";
-      preLoaderRoute: typeof ResultRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/lobby": {
-      id: "/lobby";
-      path: "/lobby";
-      fullPath: "/lobby";
-      preLoaderRoute: typeof LobbyRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/game": {
-      id: "/game";
-      path: "/game";
-      fullPath: "/game";
-      preLoaderRoute: typeof GameRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
     "/": {
       id: "/";
       path: "/";
@@ -151,9 +87,6 @@ declare module "@tanstack/react-router" {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GameRoute: GameRoute,
-  LobbyRoute: LobbyRoute,
-  ResultRoute: ResultRoute,
   RoomsIndexRoute: RoomsIndexRoute,
   RoomsRoomIdIndexRoute: RoomsRoomIdIndexRoute,
 };

@@ -4,7 +4,7 @@ metadata:
   name: sync-server
   namespace: sync-server
 spec:
-  replicas: 2
+  replicas: 1
   template:
     metadata:
       labels:
@@ -25,7 +25,7 @@ spec:
             eks.amazonaws.com/nodegroup: andere-boxing-public-node-group
           containers:
             - name: sync-server
-              image: 379708350366.dkr.ecr.ap-northeast-1.amazonaws.com/andere-boxing/sync-server:latest
+              image: 379708350366.dkr.ecr.ap-northeast-1.amazonaws.com/andere-boxing/sync-server:main
               imagePullPolicy: Always
               env:
                 - name: CERT
