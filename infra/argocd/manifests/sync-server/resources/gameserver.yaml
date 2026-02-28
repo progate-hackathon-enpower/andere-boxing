@@ -1,0 +1,40 @@
+apiVersion: agones.dev/v1
+kind: Fleet
+metadata:
+  name: sync-server
+  namespace: sync-server
+spec:
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: sync-server
+    spec:
+      health:
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        failureThreshold: 5
+      ports:
+        - name: default
+          portPolicy: Dynamic
+          containerPort: 443
+          protocol: UDP
+      template:
+        spec:
+          nodeSelector:
+            eks.amazonaws.com/nodegroup: andere-boxing-public-node-group
+          containers:
+            - name: sync-server
+              image: 379708350366.dkr.ecr.ap-northeast-1.amazonaws.com/andere-boxing/sync-server:latest
+              imagePullPolicy: Always
+              env:
+                - name: Cert
+                  valueFrom:
+                    secretKeyRef:
+                      name: sync-server-tls
+                      key: tls.crt
+                - name: Key
+                  valueFrom:
+                    secretKeyRef:
+                      name: sync-server-tls
+                      key: tls.key

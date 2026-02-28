@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-secret
+  namespace: cert-manager
+stringData:
+  token: YOUR_CLOUDFLARE_API_TOKEN

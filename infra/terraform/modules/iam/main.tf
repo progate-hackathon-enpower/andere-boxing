@@ -94,6 +94,7 @@ resource "aws_iam_role_policy" "aws_resources_policy" {
         Action = [
           "ec2:*",
           "ecr:*",
+          "eks:*",
           "lambda:*",
           "s3:*",
           "logs:*",
