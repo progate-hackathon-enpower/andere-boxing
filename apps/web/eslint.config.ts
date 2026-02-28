@@ -18,7 +18,25 @@ export default tseslint.config(
       ...reactHooksPlugin.configs.recommended.rules,
       "react/react-in-jsx-scope": "off",
       // @pixi/react の extend() で定義されたカスタム要素のプロパティを許可
-      "react/no-unknown-property": ["error", { ignore: ["texture"] }],
+      "react/no-unknown-property": [
+        "error",
+        {
+          ignore: [
+            "texture",
+            "draw",
+            "pivot",
+            "scale",
+            "anchor",
+            "tint",
+            "rotation",
+            "alpha",
+            "visible",
+            "zIndex",
+            "blendMode",
+            "filters",
+          ],
+        },
+      ],
       // SSR マウント検出パターン (useEffect + setState) を許可
       "react-hooks/set-state-in-effect": "off",
     },
