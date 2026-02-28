@@ -74,8 +74,7 @@ export function HUD() {
 
     const poll = () => {
       const state = gameStateRef.current;
-      if (state?.phase === "result") return;
-      if (state) {
+      if (state && state.phase !== "result") {
         const next: HudState = {
           p0Hp: Math.floor(state.players[0].hp),
           p0MaxHp: Math.floor(state.players[0].maxHp),

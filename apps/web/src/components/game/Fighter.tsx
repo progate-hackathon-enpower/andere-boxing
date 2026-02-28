@@ -1,9 +1,20 @@
 import { extend, useTick } from "@pixi/react";
-import { Graphics } from "pixi.js";
+import { AnimatedSprite, Texture } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { GAME_CONFIG } from "../../game/config";
+import { FRAME_COUNT, loadFighterSprite } from "../../game/fighterSprite";
 import type { AnimState } from "../../game/types";
 
-extend({ Graphics });
+extend({ AnimatedSprite });
+
+// フレームサイズ 170.2×204.8 px を画面上で表示する際のスケール
+const SPRITE_SCALE = 1.5;
+
+/** ゲームフレーム数とコマ数から animationSpeed を計算する */
+function getAnimSpeed(animState: AnimState): number {
+  if (animState === "idle") return FRAME_COUNT / 30;
+  return FRAME_COUNT / GAME_CONFIG.animDuration[animState];
+}
 
 type Props = {
   side: "left" | "right";
@@ -11,65 +22,88 @@ type Props = {
   getAnimState: () => AnimState;
 };
 
-const FIGHTER_WIDTH = 80;
-const FIGHTER_HEIGHT = 160;
-
-const ANIM_COLOR: Record<AnimState, number> = {
-  idle: 0xffffff,
-  punch: 0xff3333,
-  defend: 0x3333ff,
-  hurt: 0xffff00,
-  ko: 0x888888,
-};
-
-function renderFighter(g: Graphics, animState: AnimState) {
-  g.clear();
-  g.rect(0, 0, FIGHTER_WIDTH, FIGHTER_HEIGHT);
-  g.fill(ANIM_COLOR[animState]);
-}
-
 export function Fighter({ side, getAnimState }: Props) {
+  const [allTextures, setAllTextures] = useState<Record<
+    AnimState,
+    Texture[]
+  > | null>(null);
   const [size, setSize] = useState({
     width: window.innerWidth,
     height: window.innerHeight,
   });
+  const spriteRef = useRef<AnimatedSprite | null>(null);
+  const prevAnimState = useRef<AnimState>("idle");
+
+  // キャラクター別スプライトシートをロード（モジュールキャッシュにより一度だけ）
+  useEffect(() => {
+    loadFighterSprite(side === "left" ? "jotaro" : "dio").then(setAllTextures);
+  }, [side]);
 
   useEffect(() => {
-    const onResize = () => {
+    const onResize = () =>
       setSize({ width: window.innerWidth, height: window.innerHeight });
-    };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  const graphicsRef = useRef<Graphics>(null);
+  // マウント直後に idle アニメーションを開始する
+  const handleRef = useCallback((node: AnimatedSprite | null) => {
+    spriteRef.current = node;
+    if (node) node.gotoAndPlay(0);
+  }, []);
 
-  // マウント時・リサイズ再描画時の draw（pixiGraphics が draw を必須とするため提供）
-  const draw = useCallback(
-    (g: Graphics) => {
-      renderFighter(g, getAnimState());
-    },
-    [getAnimState],
-  );
-
-  // 毎フレーム最新の animState を読み取り、直接 pixi Graphics を更新する
+  // 毎フレーム animState の変化を検知してアニメーションを切り替える
   useTick(() => {
-    const g = graphicsRef.current;
-    if (!g) return;
-    renderFighter(g, getAnimState());
+    const sprite = spriteRef.current;
+    if (!sprite || !allTextures) return;
+
+    const animState = getAnimState();
+    if (animState === prevAnimState.current) return;
+    prevAnimState.current = animState;
+
+    sprite.textures = allTextures[animState];
+    sprite.animationSpeed = getAnimSpeed(animState);
+
+    if (animState === "ko") {
+      // ko: 最終フレームで停止
+      sprite.loop = false;
+      sprite.onComplete = () => {
+        spriteRef.current?.gotoAndStop(
+          (spriteRef.current.totalFrames ?? 1) - 1,
+        );
+      };
+      sprite.gotoAndPlay(0);
+    } else if (animState === "idle") {
+      sprite.loop = true;
+      sprite.onComplete = undefined;
+      sprite.gotoAndPlay(0);
+    } else {
+      // punch / defend / hurt: 単発再生
+      sprite.loop = false;
+      sprite.onComplete = undefined;
+      sprite.gotoAndPlay(0);
+    }
   });
+
+  if (!allTextures) return null;
 
   const x = side === "left" ? size.width * 0.25 : size.width * 0.75;
   const y = size.height * 0.85;
+  const scaleX = side === "right" ? -SPRITE_SCALE : SPRITE_SCALE;
 
   return (
-    <pixiGraphics
-      ref={graphicsRef}
-      draw={draw}
+    <pixiAnimatedSprite
+      ref={handleRef}
+      // eslint-disable-next-line react/no-unknown-property
+      textures={allTextures.idle}
+      // eslint-disable-next-line react/no-unknown-property
+      animationSpeed={getAnimSpeed("idle")}
+      // eslint-disable-next-line react/no-unknown-property
+      loop={true}
+      anchor={{ x: 0.5, y: 1 }}
       x={x}
       y={y}
-      pivot={{ x: FIGHTER_WIDTH / 2, y: FIGHTER_HEIGHT }}
-      scale={{ x: side === "right" ? -1 : 1, y: 1 }}
+      scale={{ x: scaleX, y: SPRITE_SCALE }}
     />
   );
 }
