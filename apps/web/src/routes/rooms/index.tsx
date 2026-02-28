@@ -11,15 +11,11 @@ function generateRoomId(): string {
   return `${pick()}-${pick()}`;
 }
 
-const agones = new AgonesClient({
-  clusterName: process.env.EKS_CLUSTER_NAME,
-  namespace: process.env.AGONES_NAMESPACE ?? "sync-server",
-});
-
 export const Route = createFileRoute("/rooms/")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const agones = new AgonesClient();
         const body = await request.json();
         const roomId = body.roomId ?? generateRoomId();
 

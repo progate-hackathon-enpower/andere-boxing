@@ -22,9 +22,12 @@ export class AgonesClient {
   private namespace: string;
   private eks: EksClient;
 
-  constructor(options: { namespace?: string; clusterName?: string }) {
-    this.namespace = options.namespace ?? "sync-server";
-    this.eks = new EksClient(options.clusterName);
+  constructor(options?: { namespace?: string; clusterName?: string }) {
+    this.namespace =
+      options?.namespace ?? process.env.AGONES_NAMESPACE ?? "sync-server";
+    this.eks = new EksClient(
+      options?.clusterName ?? process.env.EKS_CLUSTER_NAME,
+    );
   }
 
   /**

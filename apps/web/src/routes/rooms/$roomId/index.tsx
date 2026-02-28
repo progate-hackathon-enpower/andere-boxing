@@ -7,15 +7,11 @@ import { LobbyScreen } from "../../../components/screens/LobbyScreen";
 import { FightingScreen } from "../../../components/screens/FightingScreen";
 import { ResultScreen } from "../../../components/screens/ResultScreen";
 
-const agones = new AgonesClient({
-  clusterName: process.env.EKS_CLUSTER_NAME,
-  namespace: process.env.AGONES_NAMESPACE ?? "sync-server",
-});
-
 export const Route = createFileRoute("/rooms/$roomId/")({
   server: {
     handlers: {
       GET: async ({ params }) => {
+        const agones = new AgonesClient();
         const { roomId } = params;
 
         try {
