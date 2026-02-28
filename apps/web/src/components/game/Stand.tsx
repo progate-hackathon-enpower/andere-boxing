@@ -46,6 +46,7 @@ export function Stand({ side, getAnimState }: Props) {
   });
   const spriteRef = useRef<AnimatedSprite | null>(null);
   const prevAnimState = useRef<AnimState>("idle");
+  const punchPlayCount = useRef(0);
 
   useEffect(() => {
     loadStandSprite(STAND_CHAR[side]).then(setAllTextures);
@@ -85,6 +86,19 @@ export function Stand({ side, getAnimState }: Props) {
     } else if (animState === "idle") {
       sprite.loop = true;
       sprite.onComplete = undefined;
+      sprite.gotoAndPlay(0);
+    } else if (animState === "punch") {
+      sprite.loop = false;
+      sprite.animationSpeed = getAnimSpeed("punch") * 2;
+      punchPlayCount.current = 0;
+      sprite.onComplete = () => {
+        punchPlayCount.current += 1;
+        if (punchPlayCount.current < 2) {
+          spriteRef.current?.gotoAndPlay(0);
+        } else {
+          sprite.onComplete = undefined;
+        }
+      };
       sprite.gotoAndPlay(0);
     } else {
       sprite.loop = false;

@@ -1,53 +1,75 @@
 import { useCallback, useEffect, useRef } from "react";
 import { andere_boxing } from "../generated/event_pb";
+import { getGameTransport } from "../libs/gameTransport";
 import type { PlayerAction } from "../game/types";
 
 /**
- * キーボードで sync-server からの入力をシミュレートするフック。
+ * キーボード入力を NetworkEvent として sync-server 経由で送受信するフック。
  *
  * キーマップ:
  *   左プレイヤー (Player 0): a = punch / s = defend
  *   右プレイヤー (Player 1): k = punch / l = defend
  *
- * sync-server 導入時は、同じ PlayerAction (UserAction | null) を返す別フックに差し替えるだけでよい。
+ * キー押下 → GameTransport.send() → sync-server ブロードキャスト → 受信 → getAction()
  */
 
 const { UserAction } = andere_boxing;
 
-type KeyMap = {
-  punch: string;
-  defend: string;
+type KeyBinding = { playerIndex: 0 | 1; action: andere_boxing.UserAction };
+
+const KEY_BINDINGS: Record<string, KeyBinding> = {
+  a: { playerIndex: 0, action: UserAction.USER_ACTION_PUNCH },
+  s: { playerIndex: 0, action: UserAction.USER_ACTION_DEFEND },
+  k: { playerIndex: 1, action: UserAction.USER_ACTION_PUNCH },
+  l: { playerIndex: 1, action: UserAction.USER_ACTION_DEFEND },
 };
 
-const KEY_MAP: [KeyMap, KeyMap] = [
-  { punch: "a", defend: "s" }, // 左プレイヤー
-  { punch: "k", defend: "l" }, // 右プレイヤー
-];
+export function useKeyboard(roomId = "") {
+  const pendingRef = useRef<[PlayerAction, PlayerAction]>([null, null]);
 
-export function useKeyboard() {
-  const justPressedRef = useRef<Set<string>>(new Set());
-
+  // 受信: NetworkEvent → フレームバッファに積む
   useEffect(() => {
+    const transport = getGameTransport();
+    const handler = (event: andere_boxing.NetworkEvent) => {
+      if (event.event !== "userAction") return;
+      if (event.userId === "player-0")
+        pendingRef.current[0] = event.userAction ?? null;
+      else if (event.userId === "player-1")
+        pendingRef.current[1] = event.userAction ?? null;
+    };
+    transport.on("event", handler);
+    return () => {
+      transport.off("event", handler);
+    };
+  }, []);
+
+  // 送信: キー押下 → NetworkEvent
+  useEffect(() => {
+    const transport = getGameTransport();
     const onKeyDown = (e: KeyboardEvent) => {
-      justPressedRef.current.add(e.key.toLowerCase());
+      const binding = KEY_BINDINGS[e.key.toLowerCase()];
+      if (!binding) return;
+      transport.emit(
+        "event",
+        andere_boxing.NetworkEvent.create({
+          roomId,
+          userId: `player-${binding.playerIndex}`,
+          timestamp: Date.now(),
+          userAction: binding.action,
+        }),
+      );
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, []);
+  }, [roomId]);
 
   const getAction = useCallback((playerIndex: 0 | 1): PlayerAction => {
-    const keys = KEY_MAP[playerIndex];
-    const justPressed = justPressedRef.current;
-
-    // 同一フレームで両方押された場合、パンチを優先する
-    if (justPressed.has(keys.punch)) return UserAction.USER_ACTION_PUNCH;
-    if (justPressed.has(keys.defend)) return UserAction.USER_ACTION_DEFEND;
-    return null;
+    return pendingRef.current[playerIndex];
   }, []);
 
   /** Ticker の末尾で呼び出し、1フレーム分の入力をリセットする */
   const flushActions = useCallback(() => {
-    justPressedRef.current.clear();
+    pendingRef.current = [null, null];
   }, []);
 
   return { getAction, flushActions };
