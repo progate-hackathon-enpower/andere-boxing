@@ -1,0 +1,23 @@
+name: Deploy topaz.md
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'topaz.md'
+      - '.github/workflows/topaz-cd.yaml'
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: mono0218/topaz-md-cicd@main
+        with:
+          firebase-api-key: ${{ secrets.FIREBASE_API_KEY }}
+          firebase-refresh-token: ${{ secrets.FIREBASE_REFRESH_TOKEN }}
+          topaz-project-id: ${{ secrets.TOPAZ_PROJECT_ID }}
+          content-file-path: ./topaz.md
