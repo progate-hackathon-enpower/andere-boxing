@@ -29,6 +29,9 @@ export type GameState = {
 /**
  * プレイヤーのアクション。proto の UserAction をそのまま使用する。
  * キーボード (useKeyboard) と sync-server どちらの入力層でも同じ型を返す。
- * null は「このフレームで入力なし」を表す。
+ *
+ * - null: このフレームで入力なし
+ * - USER_ACTION_UNSPECIFIED: sync-server から来る可能性がある。
+ *   ゲームロジック側で null と同等に扱う。
  */
 export type PlayerAction = andere_boxing.UserAction | null;

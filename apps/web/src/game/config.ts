@@ -1,3 +1,5 @@
+import type { AnimState } from "./types";
+
 /** 体力・精神力の初期値と変化量。後から調整しやすいよう定数として切り出す */
 
 export const GAME_CONFIG = {
@@ -21,11 +23,14 @@ export const GAME_CONFIG = {
     regenPerFrame: 0.2,
   },
 
-  /** アニメーションの持続フレーム数 */
+  /**
+   * アニメーションの持続フレーム数。
+   * idle はループし続けるため対象外。
+   */
   animDuration: {
     punch: 20,
     defend: 15,
     hurt: 15,
     ko: 90,
-  },
+  } satisfies Record<Exclude<AnimState, "idle">, number>,
 } as const;

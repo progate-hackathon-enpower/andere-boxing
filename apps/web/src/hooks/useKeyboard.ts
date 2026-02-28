@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useCallback, useEffect, useRef } from "react";
 import { andere_boxing } from "../generated/event_pb";
 import type { PlayerAction } from "../game/types";
 
@@ -35,19 +35,20 @@ export function useKeyboard() {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, []);
 
-  const getAction = (playerIndex: 0 | 1): PlayerAction => {
+  const getAction = useCallback((playerIndex: 0 | 1): PlayerAction => {
     const keys = KEY_MAP[playerIndex];
     const justPressed = justPressedRef.current;
 
+    // 同一フレームで両方押された場合、パンチを優先する
     if (justPressed.has(keys.punch)) return UserAction.USER_ACTION_PUNCH;
     if (justPressed.has(keys.defend)) return UserAction.USER_ACTION_DEFEND;
     return null;
-  };
+  }, []);
 
   /** Ticker の末尾で呼び出し、1フレーム分の入力をリセットする */
-  const flushActions = () => {
+  const flushActions = useCallback(() => {
     justPressedRef.current.clear();
-  };
+  }, []);
 
   return { getAction, flushActions };
 }
