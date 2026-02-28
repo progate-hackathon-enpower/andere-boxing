@@ -9,13 +9,22 @@ export interface GameServerInfo {
   port: number;
 }
 
+/** EC2 ホスト名 (ec2-x-x-x-x.*.amazonaws.com) を https://ip-x-x-x-x.qwet に変換 */
+function toQwetAddress(address: string): string {
+  const match = address.match(/^ec2-(\d+-\d+-\d+-\d+)\./);
+  if (match) {
+    return `https://ip-${match[1]}.qwet.app`;
+  }
+  return `https://${address}`;
+}
+
 export class AgonesClient {
   private namespace: string;
   private eks: EksClient;
 
-  constructor(options: { namespace?: string; clusterName?: string }) {
-    this.namespace = options.namespace ?? "sync-server";
-    this.eks = new EksClient(options.clusterName);
+  constructor(options?: { namespace?: string; clusterName?: string }) {
+    this.namespace = options?.namespace ?? "sync-server";
+    this.eks = new EksClient(options?.clusterName ?? "andere-boxing-cluster");
   }
 
   /**
@@ -44,8 +53,9 @@ export class AgonesClient {
     }
 
     const data = await response.json();
+    console.log("allocateForRoom response:", JSON.stringify(data, null, 2));
     return {
-      address: data.status?.address,
+      address: toQwetAddress(data.status?.address ?? ""),
       port: data.status?.ports?.[0]?.port,
     };
   }
@@ -72,7 +82,7 @@ export class AgonesClient {
     if (!allocated) return null;
 
     return {
-      address: allocated.status?.address,
+      address: toQwetAddress(allocated.status?.address ?? ""),
       port: allocated.status?.ports?.[0]?.port,
     };
   }

@@ -39,15 +39,23 @@ data "aws_subnets" "lambda" {
   }
 }
 
+# Data source to get EKS Cluster Security Group
+data "aws_security_group" "eks_cluster" {
+  tags = {
+    Name = "${var.project_name}-eks-cluster-sg"
+  }
+}
+
 # Lambda Web Module
 module "lambda_web" {
   source = "../../modules/lambda_web"
 
-  project_name       = var.project_name
-  environment        = var.environment
-  vpc_id             = data.aws_vpc.main.id
-  subnet_ids         = data.aws_subnets.lambda.ids
-  log_retention_days = 14
+  project_name                  = var.project_name
+  environment                   = var.environment
+  vpc_id                        = data.aws_vpc.main.id
+  subnet_ids                    = data.aws_subnets.lambda.ids
+  eks_cluster_security_group_id = data.aws_security_group.eks_cluster.id
+  log_retention_days            = 14
 
   tags = local.common_tags
 }

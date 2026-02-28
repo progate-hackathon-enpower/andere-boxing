@@ -1,5 +1,4 @@
 import { useTick } from "@pixi/react";
-import { useRef } from "react";
 import { andere_boxing } from "../generated/event_pb";
 import { GAME_CONFIG } from "../game/config";
 import type {
@@ -14,6 +13,7 @@ const { UserAction } = andere_boxing;
 type UseGameLoopArgs = {
   getAction: (playerIndex: 0 | 1) => PlayerAction;
   flushActions: () => void;
+  stateRef: React.RefObject<GameState | null>;
 };
 
 function createInitialState(): GameState {
@@ -31,10 +31,15 @@ function createInitialState(): GameState {
   };
 }
 
-export function useGameLoop({ getAction, flushActions }: UseGameLoopArgs) {
-  const stateRef = useRef<GameState>(createInitialState());
-
+export function useGameLoop({
+  getAction,
+  flushActions,
+  stateRef,
+}: UseGameLoopArgs) {
   useTick((ticker) => {
+    if (stateRef.current == null) {
+      stateRef.current = createInitialState();
+    }
     const prev = stateRef.current;
     if (prev.phase !== "fighting") {
       flushActions();
@@ -159,6 +164,4 @@ export function useGameLoop({ getAction, flushActions }: UseGameLoopArgs) {
     stateRef.current = { players, timer: newTimer, phase: newPhase };
     flushActions();
   });
-
-  return stateRef;
 }

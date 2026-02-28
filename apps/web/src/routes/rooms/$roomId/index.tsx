@@ -2,18 +2,16 @@ import { createFileRoute, Link, useParams } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { AgonesClient } from "@/libs/agones";
 import { getGameTransport } from "../../../libs/gameTransport";
-import { HUD } from "../../../components/game/HUD";
 import { useGameState } from "../../../contexts/GameContext";
-
-const agones = new AgonesClient({
-  clusterName: process.env.EKS_CLUSTER_NAME,
-  namespace: process.env.AGONES_NAMESPACE ?? "sync-server",
-});
+import { LobbyScreen } from "../../../components/screens/LobbyScreen";
+import { FightingScreen } from "../../../components/screens/FightingScreen";
+import { ResultScreen } from "../../../components/screens/ResultScreen";
 
 export const Route = createFileRoute("/rooms/$roomId/")({
   server: {
     handlers: {
       GET: async ({ params }) => {
+        const agones = new AgonesClient();
         const { roomId } = params;
 
         try {
@@ -29,15 +27,10 @@ export const Route = createFileRoute("/rooms/$roomId/")({
             port: server.port,
           });
         } catch (error) {
-          return Response.json(
-            {
-              error:
-                error instanceof Error
-                  ? error.message
-                  : "Failed to find server",
-            },
-            { status: 500 },
-          );
+          const message =
+            error instanceof Error ? error.message : "Failed to find server";
+          console.error(`GET /rooms/${roomId} error:`, message, error);
+          return Response.json({ error: message }, { status: 500 });
         }
       },
     },
@@ -117,40 +110,12 @@ function RoomPage() {
   }
 
   if (phase === "lobby") {
-    return (
-      <div className="flex h-full flex-col items-center justify-center">
-        <h2 className="pixel-title mb-4 text-3xl text-white">WAITING...</h2>
-        <p className="pixel-text mb-4 text-white/80">ROOM: {roomId}</p>
-        <p className="pixel-text mb-12 text-white/80">
-          LOOKING FOR OPPONENT...
-        </p>
-        <button
-          onClick={handleStartGame}
-          className="pixel-btn pixel-btn-green text-lg"
-        >
-          FIGHT!!
-        </button>
-      </div>
-    );
+    return <LobbyScreen roomId={roomId} onStart={handleStartGame} />;
   }
 
   if (phase === "result") {
-    return (
-      <div className="flex h-full flex-col items-center justify-center">
-        <h2 className="pixel-title mb-4 text-4xl text-white">RESULT</h2>
-        <p
-          className="pixel-title mb-12 text-3xl text-yellow-400"
-          style={{ textShadow: "4px 4px 0 #78350f, 8px 8px 0 rgba(0,0,0,0.4)" }}
-        >
-          JOTARO WIN!
-        </p>
-        <Link to="/" className="pixel-btn pixel-btn-purple text-lg">
-          BACK TO TITLE
-        </Link>
-      </div>
-    );
+    return <ResultScreen />;
   }
 
-  // fighting
-  return <HUD />;
+  return <FightingScreen />;
 }
