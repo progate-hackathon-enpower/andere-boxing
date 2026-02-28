@@ -35,8 +35,11 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 [Apple Watch (watchOS)]  --->  [iOS アプリ (Swift)]
                                        |  WebTransport (UDP:7000-8000)
                                        v
-[Web UI (React/TanStack)]  <---  [sync-server (Rust)]  <---  [Kubernetes + Agones]
+[Web UI (React/TanStack)]  <---  [sync-server (Rust)]  <---  [Kubernetes (EKS) + Agones]
    対戦描画・観戦              Protocol Buffers            サーバー割り当て
+                                                                     |
+                                                        [ArgoCD (GitOps) / ECR]
+                                                         自動デプロイ / イメージ管理
 ```
 
 ## 環境一覧
@@ -46,7 +49,7 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 | iOS / watchOS | Swift / SwiftUI | - |
 | 同期サーバー | Rust / wtransport / Tokio / prost | Edition 2024 |
 | Web | React / TanStack Start / Vite / Tailwind CSS | 19 / 1.132 / 7 / 4 |
-| インフラ | Kubernetes / Agones / ArgoCD / Cloudflare Workers | - |
+| インフラ | AWS EKS / Agones / ArgoCD / Terraform / ECR | EKS 1.29 / ArgoCD 7.8.13 |
 
 ## ディレクトリ構成
 
@@ -57,8 +60,18 @@ apps/
 ├── web/              # Web フロントエンド (React)
 └── proto/            # Protocol Buffers 定義
 infra/
-├── argocd/           # Kubernetes マニフェスト
-└── terraform/        # IaC
+├── argocd/
+│   ├── helms/        # Helm Chart ベースの Application (Agones, cert-manager)
+│   ├── manifests/    # Kustomize ベースの Application (sync-server, argocd-tunnel)
+│   └── static/       # ApplicationSet 定義
+└── terraform/
+    ├── environments/
+    │   ├── network/  # VPC / サブネット
+    │   ├── eks/      # EKS クラスター / ノードグループ
+    │   ├── argocd/   # ArgoCD デプロイ
+    │   ├── lambda/   # Lambda (Web)
+    │   └── shared/   # S3 / DynamoDB (Terraform state)
+    └── modules/      # Terraform モジュール
 ```
 
 ## 開発環境構築
@@ -97,6 +110,29 @@ cd apps/web
 pnpm install
 pnpm dev
 ```
+
+### インフラ (ArgoCD デプロイ)
+
+ArgoCD を EKS にデプロイするには、まず Terraform で `network` および `eks` 環境を構築した後、以下を実行します。
+
+```bash
+cd infra/terraform/environments/argocd
+
+# バックエンド初期化 (S3 / DynamoDB)
+terraform init \
+  -backend-config="bucket=andere-boxing-tfstate" \
+  -backend-config="key=argocd/terraform.tfstate" \
+  -backend-config="region=ap-northeast-1" \
+  -backend-config="dynamodb_table=andere-boxing-tfstate-lock"
+
+# プラン確認
+terraform plan
+
+# ArgoCD デプロイ
+terraform apply
+```
+
+ArgoCD デプロイ後、ApplicationSet により `infra/argocd/manifests/` 配下のマニフェストが自動的に EKS クラスターに同期されます。
 
 ## 環境変数一覧
 
