@@ -20,12 +20,48 @@
 🔗 [リポジトリ]()
 
 
-## フロントエンド
+## フロントエンド（Web）
+| 項目 | 技術 |
+|---|---|
+| 言語 | TypeScript |
+| フレームワーク | React 19 + TanStack Start / Router |
+| ビルドツール | Vite |
+| スタイリング | TailwindCSS |
+| 2D グラフィックス | PixiJS（ゲーム描画） |
+| 通信 | Protocol Buffers（protobufjs） |
+| パッケージマネージャー | pnpm |
+| デプロイ先 | AWS Lambda |
+
+## フロントエンド（モバイル）
+| 項目 | 技術 |
+|---|---|
+| 言語 | Swift |
+| フレームワーク | SwiftUI |
+| 対応プラットフォーム | iOS / watchOS |
+| センサー連携 | Apple Watch モーションセンサー |
+| デバイス間通信 | WatchConnectivity（iOS ↔ watchOS） |
+| サーバー通信 | WebTransport（UDP） |
 
 ## バックエンド
+| 項目 | 技術 |
+|---|---|
+| 言語 | Rust |
+| 非同期ランタイム | Tokio |
+| 通信プロトコル | WebTransport（wtransport） |
+| シリアライゼーション | Protocol Buffers（prost） |
+| ゲームサーバー管理 | Agones SDK |
+| ログ・トレーシング | tracing |
 
 ## インフラ
-
+| 項目 | 技術 |
+|---|---|
+| クラウド | AWS（東京リージョン） |
+| オーケストレーション | Kubernetes（EKS） |
+| ゲームサーバースケーリング | Agones |
+| GitOps | ArgoCD |
+| IaC | Terraform |
+| コンテナレジストリ | Amazon ECR |
+| CI/CD | GitHub Actions |
 
 ## ML
 AppleWatchで「時間軸、ユーザー加速度、回転速度」の情報を持つCSVから、CoreMLでモデルを作成。ユーザーがパンチしたり、パンチに似た他の動作をしたりした時、動作を識別し、適切な操作を可能にしている。
