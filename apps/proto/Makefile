@@ -8,6 +8,9 @@ PROTO_FILES := $(wildcard *.proto)
 PROTOC := protoc
 PROTOC_GEN_SWIFT := protoc-gen-swift
 
+# Swift 生成オプション (Swift 6 concurrency 対応)
+SWIFT_OUT_OPTS := Visibility=Public,FileNaming=PathToUnderscores
+
 # デフォルトターゲット
 .PHONY: all
 all: generate
@@ -17,7 +20,14 @@ all: generate
 generate: check-deps
 	@echo "📦 Protocol Buffers から Swift コードを生成中..."
 	@mkdir -p $(GENERATED_DIR)
-	@$(PROTOC) --swift_out=$(GENERATED_DIR) $(PROTO_FILES)
+	@$(PROTOC) --swift_out=$(GENERATED_DIR) --swift_opt=$(SWIFT_OUT_OPTS) $(PROTO_FILES)
+	@echo "🔧 Swift 6 対応パッチを適用中..."
+	@for file in $(GENERATED_DIR)/*.pb.swift; do \
+		if [ -f "$$file" ]; then \
+			sed -i '' 's/^import SwiftProtobuf$$/@preconcurrency import SwiftProtobuf/' "$$file"; \
+			sed -i '' 's/^struct \(AndereBoxing_[^:]*\): SwiftProtobuf\.Message/@available(*, unavailable)\nextension \1: @unchecked Sendable {}\n\nstruct \1: SwiftProtobuf.Message/' "$$file"; \
+		fi \
+	done
 	@echo "✅ 生成完了: $(GENERATED_DIR)/"
 	@ls -lh $(GENERATED_DIR)
 
