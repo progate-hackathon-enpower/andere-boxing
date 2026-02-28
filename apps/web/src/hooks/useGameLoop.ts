@@ -19,6 +19,7 @@ type UseGameLoopArgs = {
 function createInitialState(): GameState {
   const player = (): PlayerState => ({
     hp: GAME_CONFIG.hp.initial,
+    maxHp: GAME_CONFIG.hp.initial,
     stamina: GAME_CONFIG.stamina.initial,
     animState: "idle",
     animFrame: 0,

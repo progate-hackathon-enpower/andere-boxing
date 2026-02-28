@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ENVIRONMENTS=("network" "app" "eks" "shared" "lambda")
+ENVIRONMENTS=("network" "app" "eks" "shared" "lambda" "argocd")
 
 echo "🚀 Initializing Terraform backends for all environments..."
 echo ""

@@ -27,6 +27,28 @@ resource "aws_iam_role_policy_attachment" "lambda_vpc" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaVPCAccessExecutionRole"
 }
 
+resource "aws_iam_policy" "eks_access" {
+  name = "${var.project_name}-lambda-eks-access"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect   = "Allow"
+        Action   = ["eks:DescribeCluster"]
+        Resource = "*"
+      }
+    ]
+  })
+
+  tags = var.tags
+}
+
+resource "aws_iam_role_policy_attachment" "eks_access" {
+  role       = aws_iam_role.lambda_exec.name
+  policy_arn = aws_iam_policy.eks_access.arn
+}
+
 resource "aws_security_group" "lambda" {
   name        = "${var.project_name}-lambda-web-sg"
   description = "Security group for Lambda Web"

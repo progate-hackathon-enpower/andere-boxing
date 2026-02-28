@@ -6,6 +6,8 @@ export type AnimState = "idle" | "punch" | "defend" | "hurt" | "ko";
 
 export type PlayerState = {
   hp: number;
+  /** 最大体力 */
+  maxHp: number;
   /**
    * 精神力 (スタミナ)。
    * パンチ・ディフェンド使用時に消費し、0 になるとアクション不能になる。

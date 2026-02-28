@@ -1,28 +1,41 @@
 import { extend, useTick } from "@pixi/react";
 import { AnimatedSprite, Texture } from "pixi.js";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { GAME_CONFIG } from "../../game/config";
-import { FRAME_COUNT, loadFighterSprite } from "../../game/fighterSprite";
+import {
+  STAND_FRAME_COUNT,
+  loadStandSprite,
+  type StandCharName,
+} from "../../game/standSprite";
 import type { AnimState } from "../../game/types";
 
 extend({ AnimatedSprite });
 
-// フレームサイズ 170.2×204.8 px を画面上で表示する際のスケール
 const SPRITE_SCALE = 1.5;
 
-/** ゲームフレーム数とコマ数から animationSpeed を計算する */
+// Fighter と同じ速度設定
+const ANIM_SPEED_DIVISOR: Record<AnimState, number> = {
+  idle: 55,
+  punch: 30,
+  defend: 24,
+  hurt: 24,
+  ko: 90,
+};
+
 function getAnimSpeed(animState: AnimState): number {
-  if (animState === "idle") return FRAME_COUNT / 60;
-  return FRAME_COUNT / GAME_CONFIG.animDuration[animState];
+  return STAND_FRAME_COUNT / ANIM_SPEED_DIVISOR[animState];
 }
 
 type Props = {
   side: "left" | "right";
-  /** 毎フレーム呼び出されるコールバック。ゲームループの ref から最新の animState を取得する */
   getAnimState: () => AnimState;
 };
 
-export function Fighter({ side, getAnimState }: Props) {
+const STAND_CHAR: Record<"left" | "right", StandCharName> = {
+  left: "star-platinum",
+  right: "the-world",
+};
+
+export function Stand({ side, getAnimState }: Props) {
   const [allTextures, setAllTextures] = useState<Record<
     AnimState,
     Texture[]
@@ -33,10 +46,10 @@ export function Fighter({ side, getAnimState }: Props) {
   });
   const spriteRef = useRef<AnimatedSprite | null>(null);
   const prevAnimState = useRef<AnimState>("idle");
+  const punchPlayCount = useRef(0);
 
-  // キャラクター別スプライトシートをロード（モジュールキャッシュにより一度だけ）
   useEffect(() => {
-    loadFighterSprite(side === "left" ? "jotaro" : "dio").then(setAllTextures);
+    loadStandSprite(STAND_CHAR[side]).then(setAllTextures);
   }, [side]);
 
   useEffect(() => {
@@ -46,13 +59,11 @@ export function Fighter({ side, getAnimState }: Props) {
     return () => window.removeEventListener("resize", onResize);
   }, []);
 
-  // マウント直後に idle アニメーションを開始する
   const handleRef = useCallback((node: AnimatedSprite | null) => {
     spriteRef.current = node;
     if (node) node.gotoAndPlay(0);
   }, []);
 
-  // 毎フレーム animState の変化を検知してアニメーションを切り替える
   useTick(() => {
     const sprite = spriteRef.current;
     if (!sprite || !allTextures) return;
@@ -65,7 +76,6 @@ export function Fighter({ side, getAnimState }: Props) {
     sprite.animationSpeed = getAnimSpeed(animState);
 
     if (animState === "ko") {
-      // ko: 最終フレームで停止
       sprite.loop = false;
       sprite.onComplete = () => {
         spriteRef.current?.gotoAndStop(
@@ -77,8 +87,20 @@ export function Fighter({ side, getAnimState }: Props) {
       sprite.loop = true;
       sprite.onComplete = undefined;
       sprite.gotoAndPlay(0);
+    } else if (animState === "punch") {
+      sprite.loop = false;
+      sprite.animationSpeed = getAnimSpeed("punch") * 2;
+      punchPlayCount.current = 0;
+      sprite.onComplete = () => {
+        punchPlayCount.current += 1;
+        if (punchPlayCount.current < 2) {
+          spriteRef.current?.gotoAndPlay(0);
+        } else {
+          sprite.onComplete = undefined;
+        }
+      };
+      sprite.gotoAndPlay(0);
     } else {
-      // punch / defend / hurt: 単発再生
       sprite.loop = false;
       sprite.onComplete = undefined;
       sprite.gotoAndPlay(0);
@@ -87,8 +109,9 @@ export function Fighter({ side, getAnimState }: Props) {
 
   if (!allTextures) return null;
 
-  const x = side === "left" ? size.width * 0.25 : size.width * 0.75;
-  const y = size.height * 0.85;
+  // スタンドは中央寄り・ファイターより上方に配置
+  const x = side === "left" ? size.width * 0.44 : size.width * 0.56;
+  const y = size.height * 0.75;
   const scaleX = side === "right" ? -SPRITE_SCALE : SPRITE_SCALE;
 
   return (

@@ -5,7 +5,7 @@ use std::sync::atomic::{AtomicU64, Ordering};
 use bytes::Bytes;
 use tokio::sync::mpsc;
 use tracing::{error, info};
-use wtransport::tls::{Certificate, CertificateChain, PrivateKey};
+use wtransport::tls::{CertificateChain, PrivateKey};
 use wtransport::{Endpoint, Identity, ServerConfig};
 
 use crate::broadcast::BroadcastManager;
@@ -23,30 +23,33 @@ pub struct GameServer {
 
 impl GameServer {
     /// Load TLS identity from environment variables (CERT and KEY)
-    fn load_identity() -> anyhow::Result<Identity> {
+    async fn load_identity() -> anyhow::Result<Identity> {
         let cert_pem = env::var("CERT")
             .map_err(|_| anyhow::anyhow!("CERT environment variable not set"))?;
         let key_pem = env::var("KEY")
             .map_err(|_| anyhow::anyhow!("KEY environment variable not set"))?;
 
-        // Parse PEM certificate
-        let cert_pem_parsed = pem::parse(&cert_pem)
-            .map_err(|e| anyhow::anyhow!("Failed to parse certificate PEM: {:?}", e))?;
-        let cert = Certificate::from_der(cert_pem_parsed.contents().to_vec())
-            .map_err(|e| anyhow::anyhow!("Failed to parse certificate DER: {:?}", e))?;
-        let cert_chain = CertificateChain::single(cert);
+        // Write PEM to temp files for wtransport to load
+        let cert_path = std::env::temp_dir().join("sync-server-cert.pem");
+        let key_path = std::env::temp_dir().join("sync-server-key.pem");
+        std::fs::write(&cert_path, &cert_pem)?;
+        std::fs::write(&key_path, &key_pem)?;
 
-        // Parse PEM private key
-        let key_pem_parsed = pem::parse(&key_pem)
-            .map_err(|e| anyhow::anyhow!("Failed to parse private key PEM: {:?}", e))?;
-        let private_key = PrivateKey::from_der_pkcs8(key_pem_parsed.contents().to_vec());
+        let cert_chain = CertificateChain::load_pemfile(&cert_path).await
+            .map_err(|e| anyhow::anyhow!("Failed to load certificate: {:?}", e))?;
+        let private_key = PrivateKey::load_pemfile(&key_path).await
+            .map_err(|e| anyhow::anyhow!("Failed to load private key: {:?}", e))?;
+
+        // Clean up temp files
+        let _ = std::fs::remove_file(&cert_path);
+        let _ = std::fs::remove_file(&key_path);
 
         Ok(Identity::new(cert_chain, private_key))
     }
 
     /// Create a new game server bound to the specified address
     pub async fn new(addr: SocketAddr) -> anyhow::Result<Self> {
-        let identity = Self::load_identity()?;
+        let identity = Self::load_identity().await?;
 
         let config = ServerConfig::builder()
             .with_bind_address(addr)

@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: agones
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://agones.dev/chart/stable
+    chart: agones
+    targetRevision: 1.46.0
+    helm:
+      releaseName: agones
+      values: |
+        gameservers:
+          namespaces:
+            - default
+            - sync-server
+        agones:
+          featureGates: ""
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: agones-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
