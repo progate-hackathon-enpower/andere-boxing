@@ -9,6 +9,7 @@ import { EKSClient, DescribeClusterCommand } from "@aws-sdk/client-eks";
 import { STSClient } from "@aws-sdk/client-sts";
 import { SignatureV4 } from "@smithy/signature-v4";
 import { Sha256 } from "@aws-crypto/sha256-js";
+import https from "node:https";
 
 interface EksClusterInfo {
   endpoint: string;
@@ -96,17 +97,44 @@ export class EksClient {
       });
     }
 
-    // Lambda: EKS API 直接
+    // Lambda: EKS API 直接（EKS CA 証明書を使って TLS 検証）
     const cluster = await this.getClusterInfo();
     const token = await getEksToken(this.clusterName);
 
-    return fetch(`${cluster.endpoint}${path}`, {
-      ...options,
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-        ...options.headers,
-      },
+    const url = new URL(`${cluster.endpoint}${path}`);
+    const body = options.body != null ? String(options.body) : undefined;
+
+    return new Promise<Response>((resolve, reject) => {
+      const req = https.request(
+        {
+          hostname: url.hostname,
+          port: 443,
+          path: url.pathname + url.search,
+          method: options.method ?? "GET",
+          ca: Buffer.from(cluster.ca, "base64"),
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            ...(options.headers as Record<string, string>),
+          },
+        },
+        (res) => {
+          const chunks: Buffer[] = [];
+          res.on("data", (chunk: Buffer) => chunks.push(chunk));
+          res.on("end", () => {
+            const data = Buffer.concat(chunks).toString();
+            resolve(
+              new Response(data, {
+                status: res.statusCode ?? 500,
+                headers: res.headers as Record<string, string>,
+              }),
+            );
+          });
+        },
+      );
+      req.on("error", reject);
+      if (body) req.write(body);
+      req.end();
     });
   }
 }
