@@ -20,7 +20,7 @@ class GameTransport extends EventEmitter<GameTransportEvents> {
 
   async connect(url: string) {
     if (this.transport) {
-      throw new Error("Already connected");
+      return;
     }
 
     this.transport = new WebTransport(url);

@@ -11,15 +11,11 @@ function generateRoomId(): string {
   return `${pick()}-${pick()}`;
 }
 
-const agones = new AgonesClient({
-  clusterName: process.env.EKS_CLUSTER_NAME,
-  namespace: process.env.AGONES_NAMESPACE ?? "sync-server",
-});
-
 export const Route = createFileRoute("/rooms/")({
   server: {
     handlers: {
       POST: async ({ request }) => {
+        const agones = new AgonesClient();
         const body = await request.json();
         const roomId = body.roomId ?? generateRoomId();
 
@@ -30,15 +26,12 @@ export const Route = createFileRoute("/rooms/")({
             { status: 201 },
           );
         } catch (error) {
-          return Response.json(
-            {
-              error:
-                error instanceof Error
-                  ? error.message
-                  : "Failed to allocate server",
-            },
-            { status: 500 },
-          );
+          const message =
+            error instanceof Error
+              ? error.message
+              : "Failed to allocate server";
+          console.error("POST /rooms error:", message, error);
+          return Response.json({ error: message }, { status: 500 });
         }
       },
     },
