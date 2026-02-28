@@ -3,6 +3,7 @@ import { useCallback, useRef } from "react";
 import { useTick } from "@pixi/react";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { useGameLoop } from "../../hooks/useGameLoop";
+import { useGameState } from "../../contexts/GameContext";
 import { Fighter } from "./Fighter";
 
 /**
@@ -13,6 +14,7 @@ export default function GameContent() {
   const navigate = useNavigate();
   const { getAction, flushActions } = useKeyboard();
   const gameStateRef = useGameLoop({ getAction, flushActions });
+  const { gameStateRef: contextGameStateRef } = useGameState();
   const hasNavigatedRef = useRef(false);
   const getLeftAnimState = useCallback(
     () => gameStateRef.current.players[0].animState,
@@ -24,6 +26,8 @@ export default function GameContent() {
   );
 
   useTick(() => {
+    contextGameStateRef.current = gameStateRef.current;
+
     if (hasNavigatedRef.current) return;
 
     const state = gameStateRef.current;
