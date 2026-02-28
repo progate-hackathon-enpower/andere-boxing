@@ -37,6 +37,10 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
                                        v
 [Web UI (React/TanStack)]  <---  [sync-server (Rust)]  <---  [Kubernetes + Agones]
    対戦描画・観戦              Protocol Buffers            サーバー割り当て
+        |
+        v  /rooms (ルーム作成)
+[Lambda (TanStack Start)]  --->  [EKS Kubernetes API]
+   AWS IAM 認証で直接アクセス        FleetAutoscaler で自動スケール
 ```
 
 ## 環境一覧
@@ -46,7 +50,8 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 | iOS / watchOS | Swift / SwiftUI | - |
 | 同期サーバー | Rust / wtransport / Tokio / prost | Edition 2024 |
 | Web | React / TanStack Start / Vite / Tailwind CSS | 19 / 1.132 / 7 / 4 |
-| インフラ | Kubernetes / Agones / ArgoCD / Cloudflare Workers | - |
+| インフラ | Kubernetes / Agones / ArgoCD / Cloudflare Workers / AWS Lambda | - |
+| AWS SDK | @aws-sdk/client-eks / @aws-sdk/client-sts / @smithy/signature-v4 | 3.1000+ / 5.3+ |
 
 ## ディレクトリ構成
 
@@ -102,6 +107,7 @@ pnpm dev
 
 | 変数名 | 説明 | デフォルト |
 |---|---|---|
-| `AGONES_ALLOCATOR_HOST` | Agones Allocator のホスト | - |
-| `AGONES_ALLOCATOR_PORT` | Agones Allocator のポート | - |
+| `EKS_CLUSTER_NAME` | EKS クラスター名（Lambda から Kubernetes API にアクセスするために必要） | - |
+| `AGONES_NAMESPACE` | Agones GameServer の Namespace | `sync-server` |
+| `AWS_REGION` | AWS リージョン | `ap-northeast-1` |
 | `DISCORD_WEBHOOK_URL` | Discord 通知用 Webhook URL | - |
