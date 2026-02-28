@@ -8,30 +8,17 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var motionManager = MotionManager()
+    @State private var motionManager: MotionManager
     private let connectivityManager = WatchConnectivityManager.shared
     @State private var sendTimer: Timer?
+    
+    init() {
+        let manager = MotionManager()
+        _motionManager = State(initialValue: manager)
+    }
 
     var body: some View {
         VStack(spacing: 12) {
-            // ステータス表示
-            HStack {
-                Circle()
-                    .fill(motionManager.isMonitoring ? Color.green : Color.gray)
-                    .frame(width: 12, height: 12)
-
-                Text(motionManager.isMonitoring ? "Recording" : "Stopped")
-                    .font(.caption)
-            }
-
-            // 開始/停止ボタン
-            Button(action: toggleMonitoring) {
-                Text(motionManager.isMonitoring ? "Stop" : "Start")
-                    .frame(maxWidth: .infinity)
-            }
-            .buttonStyle(.bordered)
-            .tint(motionManager.isMonitoring ? .red : .green)
-
             // センサーデータ表示
             if let data = motionManager.currentMotionData {
                 VStack(alignment: .leading, spacing: 6) {
@@ -82,16 +69,11 @@ struct ContentView: View {
             Spacer()
         }
         .padding()
+        .onAppear {
+            startMonitoring()
+        }
         .onDisappear {
             stopMonitoring()
-        }
-    }
-
-    private func toggleMonitoring() {
-        if motionManager.isMonitoring {
-            stopMonitoring()
-        } else {
-            startMonitoring()
         }
     }
 

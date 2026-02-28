@@ -1,5 +1,6 @@
 import Foundation
 import Network
+import SwiftProtobuf
 
 // MARK: - WebTransport Message Model
 
@@ -17,7 +18,7 @@ struct WebTransportMessage: Identifiable {
 
 // MARK: - WebTransport Manager
 
-/// Network.framework を使用した QUIC/WebTransport 接続管理
+/// Network.framework を使用した QUIC データグラム接続管理
 @Observable
 @MainActor
 class WebTransportManager {
@@ -26,8 +27,8 @@ class WebTransportManager {
     // MARK: - 接続状態
     var isConnected = false
     var connectionError: String = ""
-    var serverURL = "https://wt-ord.akaleapi.net:6161/echo"  // WebTransport Echo サーバー
     var messageInput: String = ""
+    private let userID = UUID().uuidString  // ユーザー識別用 UUID
 
     // MARK: - メッセージ管理
     var sentMessages: [WebTransportMessage] = []
@@ -35,48 +36,71 @@ class WebTransportManager {
 
     // MARK: - Private State
     private var connection: NWConnection?
-    private let connectionQueue = DispatchQueue(label: "com.andere-boxing.webtransport")
+    private let connectionQueue = DispatchQueue(label: "com.andere-boxing.quic")
 
     // MARK: - Init
     private init() {}
 
     // MARK: - Connection Methods
 
-    func connect() async {
-        guard !isConnected else { return }
+    func disconnect() async {
+        connection?.cancel()
+        connection = nil
+        isConnected = false
         connectionError = ""
+        print("🛑 QUIC 接続を切断")
+    }
 
-        print("🚀 WebTransport 接続を試行中: \(serverURL)")
-
-        guard let url = URL(string: serverURL) else {
-            connectionError = "無効なサーバーURL"
+    /// ルーム接続用のQUIC接続（データグラム対応）
+    func connectToRoom(endpoint: String, roomId: String) async {
+        guard connection == nil else { return }
+        connectionError = ""
+        
+        print("🚀 ルーム接続を試行中: Room=\(roomId), Endpoint=\(endpoint)")
+        
+        // エンドポイントをパース
+        var urlString = endpoint
+        if urlString.hasPrefix("https://") {
+            urlString.removeFirst(8)
+        } else if urlString.hasPrefix("http://") {
+            urlString.removeFirst(7)
+        }
+        
+        let components = urlString.split(separator: ":", maxSplits: 1, omittingEmptySubsequences: false).map(String.init)
+        guard components.count == 2,
+              let portNumber = UInt16(components[1]) else {
+            connectionError = "無効なエンドポイント形式"
             return
         }
-
-        guard let host = url.host else {
-            connectionError = "ホスト情報がありません"
-            return
-        }
-
-        let port = url.port ?? 443
-        let endpoint = NWEndpoint.hostPort(host: NWEndpoint.Host(host), port: NWEndpoint.Port(rawValue: UInt16(port))!)
-
-        // QUIC パラメータを設定（WebTransport 用の h3 ALPN）
-        var quicOptions = NWProtocolQUIC.Options()
-        quicOptions.alpn = ["h3"]  // HTTP/3 (WebTransport)
+        
+        let host = components[0]
+        let nwEndpoint = NWEndpoint.hostPort(
+            host: NWEndpoint.Host(host),
+            port: NWEndpoint.Port(rawValue: portNumber)!
+        )
+        
+        // QUIC パラメータを設定（データグラム対応）
+        let quicOptions = NWProtocolQUIC.Options()
+        quicOptions.alpn = ["h3"]  // HTTP/3
         
         let parameters = NWParameters(quic: quicOptions)
-
-        let newConnection = NWConnection(to: endpoint, using: parameters)
+        parameters.allowLocalEndpointReuse = true
+        
+        let newConnection = NWConnection(to: nwEndpoint, using: parameters)
         self.connection = newConnection
-
+        
         newConnection.stateUpdateHandler = { [weak self] (state: NWConnection.State) in
             Task { @MainActor in
                 switch state {
                 case .ready:
                     self?.isConnected = true
                     self?.connectionError = ""
-                    print("✅ WebTransport 接続成功")
+                    print("✅ QUIC 接続成功: Room=\(roomId)")
+                    
+                    // ルーム参加を通知
+                    await self?.sendRoomJoinAction(roomID: roomId)
+                    
+                    // 受信ループを開始
                     self?.receiveLoop()
                     
                 case .waiting(let error):
@@ -97,16 +121,8 @@ class WebTransportManager {
                 }
             }
         }
-
+        
         newConnection.start(queue: connectionQueue)
-    }
-
-    func disconnect() async {
-        connection?.cancel()
-        connection = nil
-        isConnected = false
-        connectionError = ""
-        print("🛑 WebTransport 接続を切断")
     }
 
     func sendMessage(_ message: String) async {
@@ -119,9 +135,12 @@ class WebTransportManager {
         let data = Data(message.utf8)
         addSentMessage(message)
         
-        print("📤 WebTransport メッセージ送信: \(message)")
+        print("📤 データグラムメッセージ送信: \(message)")
         
-        connection.send(content: data, completion: .contentProcessed { [weak self] error in
+        // データグラムとして送信（isComplete: true で1メッセージとして扱う）
+        let context = NWConnection.ContentContext.defaultMessage
+        
+        connection.send(content: data, contentContext: context, isComplete: true, completion: .contentProcessed { [weak self] error in
             if let error = error {
                 Task { @MainActor in
                     self?.connectionError = "送信失敗: \(error)"
@@ -156,19 +175,85 @@ class WebTransportManager {
         receivedMessages.removeAll()
     }
 
+    // MARK: - Protocol Buffers Actions
+
+    /// ルーム参加アクションを送信（データグラムとして）
+    func sendRoomJoinAction(roomID: String) async {
+        guard isConnected, let connection = connection else {
+            connectionError = "未接続です"
+            return
+        }
+
+        // Protocol Buffers メッセージを構築
+        var event = AndereBoxing_NetworkEvent()
+        event.roomID = roomID
+        event.userID = userID
+        event.timestamp = Int64(Date().timeIntervalSince1970 * 1000)
+        event.roomAction = .join
+        
+        do {
+            // Protocol Buffers メッセージをバイナリにシリアライズ
+            let data = try event.serializedData()
+            
+            addSentMessage("🏠 ROOM_ACTION_JOIN: Room=\(roomID)")
+            print("📤 Protocol Buffers ROOM_ACTION_JOIN 送信中: Room=\(roomID), User=\(userID), Size=\(data.count) bytes")
+            
+            // データグラムとして送信（isComplete: true で1メッセージとして扱う）
+            let context = NWConnection.ContentContext.defaultMessage
+            
+            connection.send(content: data, contentContext: context, isComplete: true, completion: .contentProcessed { [weak self] error in
+                if let error = error {
+                    Task { @MainActor in
+                        self?.connectionError = "ROOM_ACTION_JOIN 送信失敗: \(error)"
+                        print("❌ ROOM_ACTION_JOIN 送信エラー: \(error)")
+                    }
+                } else {
+                    print("✅ ROOM_ACTION_JOIN 送信成功")
+                }
+            })
+        } catch {
+            connectionError = "Protocol Buffers シリアライズ失敗: \(error)"
+            print("❌ Protocol Buffers シリアライズエラー: \(error)")
+        }
+    }
+
     // MARK: - Receive Loop
 
     private func receiveLoop() {
         guard let connection = connection else { return }
         
-        connection.receive(minimumIncompleteLength: 1, maximumLength: 64 * 1024) { [weak self] data, _, isComplete, error in
+        // メッセージ単位で受信（isComplete を待つ）
+        connection.receiveMessage { [weak self] data, context, isComplete, error in
             guard let self = self else { return }
             
             Task { @MainActor in
                 if let data = data, !data.isEmpty {
-                    if let message = String(data: data, encoding: .utf8) {
+                    // Protocol Buffers として復号化を試みる
+                    do {
+                        let event = try AndereBoxing_NetworkEvent(serializedData: data)
+                        
+                        // イベント情報をログ用に抽出
+                        var eventType = "Unknown"
+                        switch event.event {
+                        case .userAction(let action):
+                            eventType = "UserAction: \(action)"
+                        case .roomAction(let action):
+                            eventType = "RoomAction: \(action)"
+                        case nil:
+                            eventType = "EmptyEvent"
+                        }
+                        
+                        let message = "📦 Event: \(eventType) [roomID: \(event.roomID), userID: \(event.userID)]"
                         self.addReceivedMessage(message)
-                        print("📥 WebTransport 受信: \(message)")
+                        print("📥 QUIC データグラム Protocol Buffers 受信: \(message)")
+                    } catch {
+                        // Protocol Buffers として復号化失敗時は文字列として扱う
+                        if let message = String(data: data, encoding: .utf8) {
+                            self.addReceivedMessage(message)
+                            print("📥 QUIC データグラム テキスト受信: \(message)")
+                        } else {
+                            print("📥 QUIC データグラム バイナリ受信（復号化失敗）: \(data.count) bytes")
+                        }
                     }
                 }
                 
@@ -179,7 +264,8 @@ class WebTransportManager {
                     return
                 }
                 
-                if !isComplete {
+                // 次のメッセージを受信
+                if self.isConnected {
                     self.receiveLoop()
                 }
             }

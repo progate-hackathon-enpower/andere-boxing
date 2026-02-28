@@ -180,6 +180,11 @@ extension MotionManager: WKExtendedRuntimeSessionDelegate {
     func extendedRuntimeSessionWillExpire(_ session: WKExtendedRuntimeSession) {
         logger.warning("extendedRuntimeSessionWillExpire - ランタイムが期限切れ予定")
         print("⏰ バックグラウンドランタイム期限切れ予定")
+        
+        // 新しいセッションを開始して、継続的にモニタリングできるようにする
+        if #available(watchOS 10.0, *) {
+            startExtendedRuntimeSession()
+        }
     }
     
     func extendedRuntimeSession(_ session: WKExtendedRuntimeSession, didInvalidateWith reason: WKExtendedRuntimeSessionInvalidationReason, error: Error?) {

@@ -24,12 +24,19 @@ struct ContentView: View {
                     }
                     .tag(0)
 
-                // Tab 2: WebTransport Echo
-                webTransportTab()
+                // Tab 2: Room Join
+                RoomJoinView()
                     .tabItem {
-                        Label("WebTransport", systemImage: "network")
+                        Label("Room", systemImage: "rectangle.portrait.and.arrow.forward")
                     }
                     .tag(1)
+
+                // Tab 3: WebTransport Echo
+                webTransportTab()
+                    .tabItem {
+                        Label("Echo", systemImage: "network")
+                    }
+                    .tag(2)
             }
             .navigationTitle("Sensor Monitor")
             .navigationBarTitleDisplayMode(.inline)
@@ -172,11 +179,6 @@ struct ContentView: View {
                     .foregroundStyle(webTransportManager.isConnected ? Color.green : Color.gray)
 
                 Spacer()
-
-                Text(webTransportManager.serverURL)
-                    .font(.caption2)
-                    .foregroundStyle(.secondary)
-                    .lineLimit(1)
             }
             .padding()
             .background(Color(.systemGray6))
@@ -253,7 +255,7 @@ struct ContentView: View {
 
             Spacer()
 
-            // 接続ボタン
+            // 切断ボタン
             if webTransportManager.isConnected {
                 Button(action: {
                     Task {
@@ -265,16 +267,6 @@ struct ContentView: View {
                 }
                 .buttonStyle(.bordered)
                 .tint(.red)
-            } else {
-                Button(action: {
-                    Task {
-                        await webTransportManager.connect()
-                    }
-                }) {
-                    Label("Connect to Echo Server", systemImage: "network")
-                        .frame(maxWidth: .infinity)
-                }
-                .buttonStyle(.borderedProminent)
             }
         }
         .padding()
