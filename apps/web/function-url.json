@@ -1,0 +1,15 @@
+{
+  "Config": {
+    "AuthType": "NONE",
+    "Cors": {
+      "AllowOrigins": ["*"],
+      "AllowMethods": ["*"],
+      "AllowHeaders": ["*"]
+    }
+  },
+  "Permissions": [
+    {
+      "Principal": "*"
+    }
+  ]
+}
