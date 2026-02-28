@@ -5,7 +5,7 @@
 set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ENVIRONMENTS=("network" "app" "shared")
+ENVIRONMENTS=("network" "app" "eks" "shared")
 
 echo "🚀 Initializing Terraform backends for all environments..."
 echo ""
@@ -30,6 +30,7 @@ echo "Next steps:"
 echo "  1. Run terraform plan in each environment:"
 echo "     cd network && terraform plan -var-file terraform.tfvars"
 echo "     cd ../app && terraform plan -var-file terraform.tfvars"
+echo "     cd ../eks && terraform plan -var-file terraform.tfvars"
 echo "     cd ../shared && terraform plan -var-file terraform.tfvars"
 echo ""
 echo "  2. Review the plans and apply when ready:"

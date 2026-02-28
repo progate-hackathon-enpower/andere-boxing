@@ -1,6 +1,11 @@
-variable "public_subnet_id" {
-  type        = string
-  description = "Public subnet ID where NAT Gateway will be placed"
+variable "public_subnet_ids" {
+  type        = list(string)
+  description = "Public subnet IDs where NAT Gateway will be placed"
+}
+
+variable "availability_zones" {
+  type        = list(string)
+  description = "Availability zones for NAT Gateway placement"
 }
 
 variable "private_subnet_ids" {
