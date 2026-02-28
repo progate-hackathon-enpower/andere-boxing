@@ -21,6 +21,8 @@ export const GAME_CONFIG = {
     defendCost: 10,
     /** 毎フレームの自然回復量 (60fps 想定) */
     regenPerFrame: 0.2,
+    /** パンチをディフェンドで受け止めたときの回復量 */
+    blockRegenOnDefend: 10,
   },
 
   /**

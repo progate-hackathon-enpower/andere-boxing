@@ -8,6 +8,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import { useEffect, useState } from "react";
 import { GameStage } from "../components/game/GameStage";
+import { GameProvider } from "../contexts/GameContext";
 import appCss from "../App.css?url";
 
 export const Route = createRootRoute({
@@ -34,14 +35,16 @@ function RootLayout() {
   }, []);
 
   return (
-    <div className="game-container">
-      {/* PixiJS 背景レイヤー（クライアントマウント後のみ） */}
-      <div className="pixi-layer">{mounted && <GameStage />}</div>
-      {/* React UI オーバーレイ */}
-      <div className="ui-layer">
-        <Outlet />
+    <GameProvider>
+      <div className="game-container">
+        {/* PixiJS 背景レイヤー（クライアントマウント後のみ） */}
+        <div className="pixi-layer">{mounted && <GameStage />}</div>
+        {/* React UI オーバーレイ */}
+        <div className="ui-layer">
+          <Outlet />
+        </div>
       </div>
-    </div>
+    </GameProvider>
   );
 }
 
