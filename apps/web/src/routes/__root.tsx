@@ -16,9 +16,15 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Andere Boxing" },
+      { title: "RUSH BATTLE!!" },
     ],
-    links: [{ rel: "stylesheet", href: appCss }],
+    links: [
+      { rel: "stylesheet", href: appCss },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=DotGothic16&family=Press+Start+2P&display=swap",
+      },
+    ],
   }),
 
   component: RootLayout,
