@@ -55,6 +55,30 @@ struct ContentView: View {
                 .font(.caption)
                 .foregroundStyle(.secondary)
 
+            // パンチ検出表示
+            if !motionManager.detectedPunches.isEmpty {
+                VStack(alignment: .leading, spacing: 6) {
+                    Text("🥊 Punches Detected: \(motionManager.detectedPunches.count)")
+                        .font(.caption)
+                        .fontWeight(.bold)
+                        .foregroundColor(.red)
+                    
+                    ForEach(motionManager.detectedPunches.suffix(3)) { punch in
+                        HStack(spacing: 6) {
+                            Text(punch.formattedTime)
+                                .font(.caption2)
+                            Spacer()
+                            Text("📊 \(String(format: "%.2f", punch.peakAcceleration))G")
+                                .font(.caption2)
+                        }
+                    }
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding(8)
+                .background(.red.opacity(0.2))
+                .cornerRadius(6)
+            }
+
             Spacer()
         }
         .padding()
