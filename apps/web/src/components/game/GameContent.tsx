@@ -5,6 +5,7 @@ import { useKeyboard } from "../../hooks/useKeyboard";
 import { useGameLoop } from "../../hooks/useGameLoop";
 import { useGameState } from "../../contexts/GameContext";
 import { Fighter } from "./Fighter";
+import { Stand } from "./Stand";
 
 /**
  * ゲームロジック層。useKeyboard → event_pb → protobufjs という依存チェーンを持つため、
@@ -39,8 +40,11 @@ export default function GameContent() {
 
   return (
     <>
+      {/* Fighter → Stand の順で描画（Stand がファイターより手前に表示される）*/}
       <Fighter side="left" getAnimState={getLeftAnimState} />
       <Fighter side="right" getAnimState={getRightAnimState} />
+      <Stand side="left" getAnimState={getLeftAnimState} />
+      <Stand side="right" getAnimState={getRightAnimState} />
     </>
   );
 }
