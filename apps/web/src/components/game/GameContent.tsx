@@ -1,5 +1,5 @@
 import { useNavigate } from "@tanstack/react-router";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import { useTick } from "@pixi/react";
 import { useKeyboard } from "../../hooks/useKeyboard";
 import { useGameLoop } from "../../hooks/useGameLoop";
@@ -14,6 +14,14 @@ export default function GameContent() {
   const { getAction, flushActions } = useKeyboard();
   const gameStateRef = useGameLoop({ getAction, flushActions });
   const hasNavigatedRef = useRef(false);
+  const getLeftAnimState = useCallback(
+    () => gameStateRef.current.players[0].animState,
+    [gameStateRef],
+  );
+  const getRightAnimState = useCallback(
+    () => gameStateRef.current.players[1].animState,
+    [gameStateRef],
+  );
 
   useTick(() => {
     if (hasNavigatedRef.current) return;
@@ -27,14 +35,8 @@ export default function GameContent() {
 
   return (
     <>
-      <Fighter
-        side="left"
-        getAnimState={() => gameStateRef.current.players[0].animState}
-      />
-      <Fighter
-        side="right"
-        getAnimState={() => gameStateRef.current.players[1].animState}
-      />
+      <Fighter side="left" getAnimState={getLeftAnimState} />
+      <Fighter side="right" getAnimState={getRightAnimState} />
     </>
   );
 }
