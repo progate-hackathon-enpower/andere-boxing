@@ -2,69 +2,60 @@
  * Agones Game Server Allocation Client
  */
 
-export interface GameServerPort {
-  name: string;
+import { EksClient } from "./eks";
+
+export interface GameServerInfo {
+  address: string;
   port: number;
 }
 
-export interface GameServer {
-  metadata: {
-    name: string;
-    namespace: string;
-    labels?: Record<string, string>;
-  };
-  status: {
-    state: "Ready" | "Allocated" | "Shutdown" | "Error";
-    address: string;
-    ports: GameServerPort[];
-  };
-}
-
-export interface AllocationResponse {
-  gameServerName: string;
-  address: string;
-  ports: GameServerPort[];
-}
-
 export class AgonesClient {
-  private baseUrl: string;
   private namespace: string;
+  private eks: EksClient;
 
-  constructor(options: { baseUrl: string; namespace?: string }) {
-    this.baseUrl = options.baseUrl.replace(/\/$/, "");
-    this.namespace = options.namespace ?? "default";
+  constructor(options: { namespace?: string; clusterName?: string }) {
+    this.namespace = options.namespace ?? "sync-server";
+    this.eks = new EksClient(options.clusterName);
   }
 
   /**
-   * Allocate a game server for a specific room
+   * GameServerAllocation を作成してルームにサーバーを割り当て
    */
-  async allocateForRoom(roomId: string): Promise<AllocationResponse> {
-    const response = await fetch(`${this.baseUrl}/gameserverallocation`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        namespace: this.namespace,
-        gameServerSelectors: [{ gameServerState: "Ready" }],
+  async allocateForRoom(roomId: string): Promise<GameServerInfo> {
+    const body = {
+      apiVersion: "allocation.agones.dev/v1",
+      kind: "GameServerAllocation",
+      metadata: { namespace: this.namespace },
+      spec: {
+        selectors: [{ matchLabels: { app: "sync-server" } }],
         metadata: {
           labels: { "agones.dev/room-id": roomId },
         },
-      }),
-    });
+      },
+    };
+
+    const response = await this.eks.request(
+      `/apis/allocation.agones.dev/v1/namespaces/${this.namespace}/gameserverallocations`,
+      { method: "POST", body: JSON.stringify(body) },
+    );
 
     if (!response.ok) {
       throw new Error(`Failed to allocate: ${await response.text()}`);
     }
 
-    return response.json();
+    const data = await response.json();
+    return {
+      address: data.status?.address,
+      port: data.status?.ports?.[0]?.port,
+    };
   }
 
   /**
-   * Find an allocated server by room ID
+   * ルーム ID で割り当て済みの GameServer を検索
    */
-  async findServerByRoomId(roomId: string): Promise<GameServer | null> {
-    const response = await fetch(
-      `${this.baseUrl}/namespaces/${this.namespace}/gameservers?labelSelector=agones.dev/room-id=${roomId}`,
-      { headers: { "Content-Type": "application/json" } },
+  async findServerByRoomId(roomId: string): Promise<GameServerInfo | null> {
+    const response = await this.eks.request(
+      `/apis/agones.dev/v1/namespaces/${this.namespace}/gameservers?labelSelector=agones.dev/room-id=${encodeURIComponent(roomId)}`,
     );
 
     if (!response.ok) {
@@ -72,7 +63,17 @@ export class AgonesClient {
     }
 
     const data = await response.json();
-    const servers: GameServer[] = data.items ?? [];
-    return servers.find((s) => s.status.state === "Allocated") ?? null;
+
+    const allocated = (data.items ?? []).find(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (item: any) => item.status?.state === "Allocated",
+    );
+
+    if (!allocated) return null;
+
+    return {
+      address: allocated.status?.address,
+      port: allocated.status?.ports?.[0]?.port,
+    };
   }
 }

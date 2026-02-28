@@ -23,7 +23,11 @@
     ]
   },
   "dependencies": {
+    "@aws-crypto/sha256-js": "^5.2.0",
+    "@aws-sdk/client-eks": "^3.1000.0",
+    "@aws-sdk/client-sts": "^3.1000.0",
     "@pixi/react": "^8.0.5",
+    "@smithy/signature-v4": "^5.3.10",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-router": "^1.132.0",

@@ -1,11 +1,11 @@
 import EventEmitter from "eventemitter3";
 import { andere_boxing } from "@/generated/event_pb";
 
-let instance: EventEmitter<GameTransportEvents> | null = null;
+let instance: GameTransport | null = null;
 
 export function getGameTransport() {
   if (!instance) {
-    instance = new EventEmitter<GameTransportEvents>();
+    instance = new GameTransport();
   }
   return instance;
 }

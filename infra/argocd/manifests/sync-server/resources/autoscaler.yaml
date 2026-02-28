@@ -1,0 +1,13 @@
+apiVersion: autoscaling.agones.dev/v1
+kind: FleetAutoscaler
+metadata:
+  name: sync-server
+  namespace: sync-server
+spec:
+  fleetName: sync-server
+  policy:
+    type: Buffer
+    buffer:
+      bufferSize: 1
+      minReplicas: 1
+      maxReplicas: 5

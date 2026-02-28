@@ -1,11 +1,19 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AgonesClient } from "@/libs/agones";
 
+function generateRoomId(): string {
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const pick = () =>
+    Array.from(
+      { length: 4 },
+      () => chars[Math.floor(Math.random() * chars.length)],
+    ).join("");
+  return `${pick()}-${pick()}`;
+}
+
 const agones = new AgonesClient({
-  baseUrl:
-    process.env.AGONES_ALLOCATOR_URL ??
-    "http://agones-allocator.agones-system.svc",
-  namespace: process.env.AGONES_NAMESPACE ?? "default",
+  clusterName: process.env.EKS_CLUSTER_NAME,
+  namespace: process.env.AGONES_NAMESPACE ?? "sync-server",
 });
 
 export const Route = createFileRoute("/rooms/")({
@@ -13,19 +21,12 @@ export const Route = createFileRoute("/rooms/")({
     handlers: {
       POST: async ({ request }) => {
         const body = await request.json();
-        const roomId = body.roomId ?? crypto.randomUUID();
+        const roomId = body.roomId ?? generateRoomId();
 
         try {
           const server = await agones.allocateForRoom(roomId);
           return Response.json(
-            {
-              roomId,
-              server: {
-                name: server.gameServerName,
-                address: server.address,
-                ports: server.ports,
-              },
-            },
+            { roomId, address: server.address, port: server.port },
             { status: 201 },
           );
         } catch (error) {
