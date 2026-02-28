@@ -13,14 +13,32 @@ const config = defineConfig({
       "@": fileURLToPath(new URL("./src", import.meta.url)),
     },
   },
+  optimizeDeps: {
+    include: ["protobufjs/minimal"],
+  },
+  build: {
+    rollupOptions: {
+      external: [],
+      output: {
+        // CommonJS の module を ESM コンテキストで使用可能にする
+        globals: {
+          module: "undefined",
+          require: "undefined",
+        },
+      },
+    },
+  },
   ssr: {
     // PixiJS はブラウザ専用のため、Vite に直接バンドルさせて
     // Node.js の ESM 拡張子解決エラーを回避する
-    noExternal: ["@pixi/react", "pixi.js"],
+    noExternal: ["@pixi/react", "pixi.js", "protobufjs"],
   },
   plugins: [
     devtools(),
-    nitro(),
+    nitro({
+      preset: process.env.NITRO_PRESET || "node-server",
+      serveStatic: true,
+    }),
     viteTsConfigPaths({
       projects: ["./tsconfig.json"],
     }),
@@ -31,3 +49,4 @@ const config = defineConfig({
 });
 
 export default config;
+

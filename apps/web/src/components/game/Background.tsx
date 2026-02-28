@@ -14,7 +14,7 @@ export function Background() {
   });
 
   useEffect(() => {
-    Assets.load<Texture>("/assets/background.png").then(setTexture);
+    Assets.load<Texture>("/assets/background.jpg").then(setTexture);
   }, []);
 
   useEffect(() => {

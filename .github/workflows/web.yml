@@ -1,0 +1,188 @@
+name: Deploy Web (Lambda)
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'apps/web/**'
+      - 'apps/proto/**'
+      - '.github/workflows/web.yml'
+  pull_request:
+    branches:
+      - main
+    paths:
+      - 'apps/web/**'
+      - 'apps/proto/**'
+      - '.github/workflows/web.yml'
+    types: [opened, synchronize, reopened, closed]
+  workflow_dispatch:
+
+env:
+  AWS_REGION: ap-northeast-1
+  FUNCTION_NAME: andere-boxing-web
+  NODE_VERSION: '22'
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+jobs:
+  build:
+    if: github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: latest
+
+      - name: Install dependencies
+        working-directory: apps/web
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate protobuf code
+        working-directory: apps/web
+        run: mkdir -p src/generated && pnpm run proto:gen
+
+      - name: Build with aws-lambda preset
+        working-directory: apps/web
+        env:
+          NITRO_PRESET: aws-lambda
+        run: pnpm run build
+
+      - name: Create deployment zip
+        working-directory: apps/web/.output
+        run: zip -r ../deploy.zip .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lambda-deploy-package
+          path: apps/web/deploy.zip
+          retention-days: 1
+
+  deploy-production:
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lambda-deploy-package
+          path: apps/web
+
+      - name: Setup lambroll
+        uses: fujiwara/lambroll@v1
+
+      - name: Deploy with lambroll
+        working-directory: apps/web
+        env:
+          LAMBDA_ROLE_ARN: ${{ secrets.LAMBDA_ROLE_ARN }}
+        run: |
+          lambroll deploy \
+            --function function.json \
+            --src deploy.zip \
+            --region ${{ env.AWS_REGION }}
+
+  deploy-preview:
+    needs: build
+    if: github.event_name == 'pull_request' && github.event.action != 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: lambda-deploy-package
+          path: apps/web
+
+      - name: Setup lambroll
+        uses: fujiwara/lambroll@v1
+
+      - name: Deploy preview with lambroll
+        working-directory: apps/web
+        env:
+          LAMBDA_ROLE_ARN: ${{ secrets.LAMBDA_ROLE_ARN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          FUNCTION_URL_QUALIFIER: pr-${{ github.event.pull_request.number }}
+        run: |
+          lambroll deploy \
+            --function function.json \
+            --src deploy.zip \
+            --region ${{ env.AWS_REGION }} \
+            --alias "pr-${PR_NUMBER}" \
+            --function-url function-url.json
+
+      - name: Get preview URL
+        id: preview-url
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          PREVIEW_URL=$(aws lambda get-function-url-config \
+            --function-name ${{ env.FUNCTION_NAME }} \
+            --qualifier "pr-${PR_NUMBER}" \
+            --query 'FunctionUrl' \
+            --output text)
+          echo "url=${PREVIEW_URL}" >> "$GITHUB_OUTPUT"
+
+      - name: Comment preview URL on PR
+        uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          header: preview-url
+          message: |
+            🚀 **Preview Environment**
+            ${{ steps.preview-url.outputs.url }}
+
+  cleanup-preview:
+    if: github.event_name == 'pull_request' && github.event.action == 'closed'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Cleanup preview alias and Function URL
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          ALIAS_NAME="pr-${PR_NUMBER}"
+
+          aws lambda delete-function-url-config \
+            --function-name ${{ env.FUNCTION_NAME }} \
+            --qualifier "${ALIAS_NAME}" 2>/dev/null || true
+
+          aws lambda delete-alias \
+            --function-name ${{ env.FUNCTION_NAME }} \
+            --name "${ALIAS_NAME}" 2>/dev/null || true
+
+          echo "Cleaned up preview for PR #${PR_NUMBER}"
