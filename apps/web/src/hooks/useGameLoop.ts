@@ -33,7 +33,7 @@ function createInitialState(): GameState {
 export function useGameLoop({ getAction, flushActions }: UseGameLoopArgs) {
   const stateRef = useRef<GameState>(createInitialState());
 
-  useTick(() => {
+  useTick((delta) => {
     const prev = stateRef.current;
     if (prev.phase !== "fighting") {
       flushActions();
@@ -140,7 +140,7 @@ export function useGameLoop({ getAction, flushActions }: UseGameLoopArgs) {
     }
 
     // 6. タイマー更新とフェーズ遷移
-    const newTimer = Math.max(0, prev.timer - 1 / 60);
+    const newTimer = Math.max(0, prev.timer - delta / 60);
     let newPhase: GamePhase = prev.phase;
 
     if (newTimer <= 0) {

@@ -22,6 +22,12 @@ const ANIM_COLOR: Record<AnimState, number> = {
   ko: 0x888888,
 };
 
+function renderFighter(g: Graphics, animState: AnimState) {
+  g.clear();
+  g.rect(0, 0, FIGHTER_WIDTH, FIGHTER_HEIGHT);
+  g.fill(ANIM_COLOR[animState]);
+}
+
 export function Fighter({ side, getAnimState }: Props) {
   const [size, setSize] = useState({
     width: window.innerWidth,
@@ -41,9 +47,7 @@ export function Fighter({ side, getAnimState }: Props) {
   // マウント時・リサイズ再描画時の draw（pixiGraphics が draw を必須とするため提供）
   const draw = useCallback(
     (g: Graphics) => {
-      g.clear();
-      g.rect(0, 0, FIGHTER_WIDTH, FIGHTER_HEIGHT);
-      g.fill(ANIM_COLOR[getAnimState()]);
+      renderFighter(g, getAnimState());
     },
     [getAnimState],
   );
@@ -52,10 +56,7 @@ export function Fighter({ side, getAnimState }: Props) {
   useTick(() => {
     const g = graphicsRef.current;
     if (!g) return;
-    const animState = getAnimState();
-    g.clear();
-    g.rect(0, 0, FIGHTER_WIDTH, FIGHTER_HEIGHT);
-    g.fill(ANIM_COLOR[animState]);
+    renderFighter(g, getAnimState());
   });
 
   const x = side === "left" ? size.width * 0.25 : size.width * 0.75;
