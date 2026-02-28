@@ -52,7 +52,7 @@ jobs:
 
       - name: Generate protobuf code
         working-directory: apps/web
-        run: pnpm run proto:gen
+        run: mkdir -p src/generated && pnpm run proto:gen
 
       - name: Build with aws-lambda preset
         working-directory: apps/web
