@@ -1,0 +1,8 @@
+apiVersion: allocation.agones.dev/v1
+kind: GameServerAllocation
+metadata:
+  namespace: sync-server
+spec:
+  selectors:
+    - matchLabels:
+        app: sync-server
