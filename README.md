@@ -36,7 +36,8 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
                                        |  WebTransport (UDP:7000-8000)
                                        v
 [Web UI (React/TanStack)]  <---  [sync-server (Rust)]  <---  [Kubernetes + Agones]
-   対戦描画・観戦              Protocol Buffers            サーバー割り当て
+   対戦描画・観戦              WebTransport/Datagram        サーバー割り当て
+                                Protocol Buffers
 ```
 
 ## 環境一覧
@@ -45,7 +46,7 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 |---|---|---|
 | iOS / watchOS | Swift / SwiftUI | - |
 | 同期サーバー | Rust / wtransport / Tokio / prost | Edition 2024 |
-| Web | React / TanStack Start / Vite / Tailwind CSS | 19 / 1.132 / 7 / 4 |
+| Web | React / TanStack Start / Vite / Tailwind CSS / EventEmitter3 | 19 / 1.132 / 7 / 4 / 5 |
 | インフラ | Kubernetes / Agones / ArgoCD / Cloudflare Workers | - |
 
 ## ディレクトリ構成
