@@ -74,6 +74,7 @@ export function HUD() {
 
     const poll = () => {
       const state = gameStateRef.current;
+      if (state?.phase === "result") return;
       if (state) {
         const next: HudState = {
           p0Hp: Math.floor(state.players[0].hp),
@@ -121,10 +122,7 @@ export function HUD() {
       </div>
 
       {/* タイマー（中央） */}
-      <div
-        className="shrink-0 text-center font-bold text-white drop-shadow-lg"
-        style={{ fontSize: `${2 * (window.innerHeight / 1080)}rem` }}
-      >
+      <div className="shrink-0 text-center [font-size:clamp(1rem,3.7vh,4rem)] font-bold text-white drop-shadow-lg">
         {hud.timer}
       </div>
 
