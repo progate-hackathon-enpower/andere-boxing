@@ -1,0 +1,16 @@
+{
+  "Config": {
+    "AuthType": "NONE",
+    "Qualifier": "{{ env `FUNCTION_URL_QUALIFIER` `$LATEST` }}",
+    "Cors": {
+      "AllowOrigins": ["*"],
+      "AllowMethods": ["*"],
+      "AllowHeaders": ["*"]
+    }
+  },
+  "Permissions": [
+    {
+      "Principal": "*"
+    }
+  ]
+}

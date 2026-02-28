@@ -1,3 +1,17 @@
+# OIDC Provider for GitHub Actions
+resource "aws_iam_openid_connect_provider" "github_actions" {
+  url             = "https://token.actions.githubusercontent.com"
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = ["6938fd4d98bab03faadb97b34396831e3780aea1"]
+
+  tags = merge(
+    var.tags,
+    {
+      Name = "${var.project_name}-github-actions-oidc"
+    }
+  )
+}
+
 # IAM role for GitHub Actions
 resource "aws_iam_role" "github_actions" {
   name = "${var.project_name}-${var.github_role_name}"
@@ -8,7 +22,7 @@ resource "aws_iam_role" "github_actions" {
       {
         Effect = "Allow"
         Principal = {
-          Federated = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:oidc-provider/token.actions.githubusercontent.com"
+          Federated = aws_iam_openid_connect_provider.github_actions.arn
         }
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
@@ -80,6 +94,7 @@ resource "aws_iam_role_policy" "aws_resources_policy" {
         Action = [
           "ec2:*",
           "ecr:*",
+          "lambda:*",
           "s3:*",
           "logs:*",
           "cloudwatch:*",

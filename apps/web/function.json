@@ -1,0 +1,14 @@
+{
+  "FunctionName": "andere-boxing-web",
+  "Handler": "server/index.handler",
+  "Runtime": "nodejs22.x",
+  "MemorySize": 512,
+  "Timeout": 30,
+  "Role": "{{ must_env `LAMBDA_ROLE_ARN` }}",
+  "Architectures": ["arm64"],
+  "Environment": {
+    "Variables": {
+      "NODE_ENV": "production"
+    }
+  }
+}
