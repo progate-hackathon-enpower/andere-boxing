@@ -31,7 +31,11 @@ export class AgonesClient {
 
   constructor(options?: { namespace?: string; clusterName?: string }) {
     this.namespace = options?.namespace ?? "sync-server";
-    this.eks = new EksClient(options?.clusterName ?? "andere-boxing-cluster");
+    const clusterName =
+      process.env.NODE_ENV === "development"
+        ? undefined
+        : (options?.clusterName ?? "andere-boxing-cluster");
+    this.eks = new EksClient(clusterName);
   }
 
   /**

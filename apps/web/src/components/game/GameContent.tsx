@@ -11,7 +11,7 @@ import { Stand } from "./Stand";
  * GameStage から React.lazy で遅延ロードし SSR のモジュールグラフに入れない。
  */
 export default function GameContent() {
-  const { gameStateRef } = useGameState();
+  const { gameStateRef, playerCountRef } = useGameState();
   const { getAction, flushActions } = useKeyboard();
   useGameLoop({ getAction, flushActions, stateRef: gameStateRef });
 
@@ -24,6 +24,17 @@ export default function GameContent() {
     [gameStateRef],
   );
 
+  // star-platinum: 1人目が JOIN で表示
+  const getLeftVisible = useCallback(
+    () => playerCountRef.current >= 1,
+    [playerCountRef],
+  );
+  // the-world: 2人目が JOIN で表示
+  const getRightVisible = useCallback(
+    () => playerCountRef.current >= 2,
+    [playerCountRef],
+  );
+
   return (
     <>
       {/* Dogo → Fighter → Stand の順で描画（Dogo が最背後、Stand が最前面）*/}
@@ -31,8 +42,16 @@ export default function GameContent() {
       <Dogo side="right" getAnimState={getRightAnimState} />
       <Fighter side="left" getAnimState={getLeftAnimState} />
       <Fighter side="right" getAnimState={getRightAnimState} />
-      <Stand side="left" getAnimState={getLeftAnimState} />
-      <Stand side="right" getAnimState={getRightAnimState} />
+      <Stand
+        side="left"
+        getAnimState={getLeftAnimState}
+        getVisible={getLeftVisible}
+      />
+      <Stand
+        side="right"
+        getAnimState={getRightAnimState}
+        getVisible={getRightVisible}
+      />
     </>
   );
 }

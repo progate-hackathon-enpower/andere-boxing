@@ -6,9 +6,13 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { TanStackDevtools } from "@tanstack/react-devtools";
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { GameStage } from "../components/game/GameStage";
 import { GameProvider } from "../contexts/GameContext";
+
+const DebugEventPanel = lazy(
+  () => import("../components/debug/DebugEventPanel"),
+);
 import appCss from "../App.css?url";
 
 export const Route = createRootRoute({
@@ -50,6 +54,11 @@ function RootLayout() {
           <Outlet />
         </div>
       </div>
+      {mounted && (
+        <Suspense fallback={null}>
+          <DebugEventPanel />
+        </Suspense>
+      )}
     </GameProvider>
   );
 }

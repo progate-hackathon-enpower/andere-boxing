@@ -45,7 +45,7 @@ function RoomPage() {
   const { roomId } = useParams({ from: "/rooms/$roomId/" });
   const [phase, setPhase] = useState<RoomPhase>("lobby");
   const [error, setError] = useState<string | null>(null);
-  const { reset, gameStateRef } = useGameState();
+  const { reset, gameStateRef, playerCountRef } = useGameState();
 
   // ルームに入ったら sync-server に WebTransport 接続
   useEffect(() => {
@@ -73,9 +73,10 @@ function RoomPage() {
 
     return () => {
       cancelled = true;
+      playerCountRef.current = 0;
       getGameTransport().close();
     };
-  }, [roomId]);
+  }, [roomId, playerCountRef]);
 
   const handleStartGame = () => {
     reset();
