@@ -26,6 +26,7 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
   <img src="https://img.shields.io/badge/Kubernetes-326CE5?logo=kubernetes&logoColor=white" alt="Kubernetes" />
   <!-- ここから追加分 -->
   <img src="https://img.shields.io/badge/AWS-232F3E?logo=amazonwebservices&logoColor=white" alt="AWS" />
+  <img src="https://img.shields.io/badge/WebSocket-010101?logo=websocket&logoColor=white" alt="WebSocket" />
   <img src="https://img.shields.io/badge/WebTransport-61DAFB?logoColor=black" alt="WebTransport" />
 </p>
 
@@ -34,6 +35,8 @@ Apple Watch のセンサーデータをトリガーに、iOS アプリ経由で 
 
 ```
 [Apple Watch (watchOS)]  --->  [iOS アプリ (Swift)]
+                                       |  WebSocket (WSS, TCP:4434)
+                                       |  または
                                        |  WebTransport (UDP:7000-8000)
                                        v
 [Web UI (React/TanStack)]  <---  [sync-server (Rust)]  <---  [Kubernetes + Agones]
@@ -106,3 +109,5 @@ pnpm dev
 | `AGONES_ALLOCATOR_HOST` | Agones Allocator のホスト | - |
 | `AGONES_ALLOCATOR_PORT` | Agones Allocator のポート | - |
 | `DISCORD_WEBHOOK_URL` | Discord 通知用 Webhook URL | - |
+| `CERT` | WSS サーバー用 TLS 証明書 (PEM 形式) | - |
+| `KEY` | WSS サーバー用 TLS 秘密鍵 (PEM 形式) | - |
