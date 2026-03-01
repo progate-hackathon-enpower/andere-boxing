@@ -9,7 +9,7 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var connectivityManager = WatchConnectivityManager.shared
-    @State private var webTransportManager = WebTransportManager.shared
+        @State private var webTransportManager = WebSocketManager.shared
     @State private var showingExportSheet = false
     @State private var exportedCSV = ""
     @State private var selectedTab: Int = 0
@@ -37,6 +37,13 @@ struct ContentView: View {
                         Label("Echo", systemImage: "network")
                     }
                     .tag(2)
+
+                // Tab 4: Training Data Collection
+                TrainingDataCollectionView()
+                    .tabItem {
+                        Label("Training", systemImage: "brain.head.profile")
+                    }
+                    .tag(3)
             }
             .navigationTitle("Sensor Monitor")
             .navigationBarTitleDisplayMode(.inline)
@@ -333,7 +340,7 @@ struct StatCard: View {
 }
 
 struct MessageBubble: View {
-    let message: WebTransportMessage
+    let message: WebSocketMessage
 
     var body: some View {
         HStack(alignment: .top, spacing: 8) {

@@ -78,20 +78,25 @@ struct ContentView: View {
     }
 
     private func startMonitoring() {
+        print("🚀 [Watch] ContentView.startMonitoring 開始")
         motionManager.startMonitoring()
+        print("📊 [Watch] MotionManager.isMonitoring: \(motionManager.isMonitoring)")
 
-        // 10Hz でデータ送信（50Hz 計測 → 10Hz 送信）
-        sendTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { _ in
+        // 20Hz でデータ送信（50Hz 計測 → 20Hz 送信）リアルタイム性向上
+        sendTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { _ in
             if let latestData = motionManager.currentMotionData {
                 connectivityManager.sendMotionData(latestData)
             }
         }
+        print("⏱️ [Watch] 送信タイマー開始 (0.05秒間隔 = 20Hz)")
     }
 
     private func stopMonitoring() {
+        print("🛑 [Watch] ContentView.stopMonitoring 開始")
         motionManager.stopMonitoring()
         sendTimer?.invalidate()
         sendTimer = nil
+        print("📊 [Watch] MotionManager.isMonitoring: \(motionManager.isMonitoring)")
     }
 }
 

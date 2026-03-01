@@ -11,7 +11,8 @@ import SwiftUI
 struct RoomInfo: Codable {
     let roomId: String
     let address: String
-    let port: Int
+    let port: Int?
+    let wsPort: Int?
 }
 
 /// ルームJOIN処理を管理するViewModel
@@ -20,7 +21,7 @@ struct RoomInfo: Codable {
 class RoomJoinViewModel {
     // 入力フィールド
     var roomId: String = ""
-    var apiServerURL: String = "https://your-api-server.com"  // Lambda Function URL
+    var apiServerURL: String = "https://jdx5mzkles7fj6tc64smdx5rvq0ogrvr.lambda-url.ap-northeast-1.on.aws"  // Lambda Function URL
     
     // 状態管理
     var isLoading: Bool = false
@@ -28,12 +29,14 @@ class RoomJoinViewModel {
     var isConnected: Bool = false
     var currentRoomInfo: RoomInfo?
     
-    private let webTransportManager = WebTransportManager.shared
+    private let webTransportManager = WebSocketManager.shared
     
     /// ルーム情報を取得してWebTransport接続を開始
     func joinRoom() async {
+        print("🔌 [RoomJoin] joinRoom開始 roomId=\(roomId), apiServerURL=\(apiServerURL)")
         guard !roomId.isEmpty else {
             errorMessage = "ルームIDを入力してください"
+            print("❌ [RoomJoin] roomIdが空のため接続中断")
             return
         }
         
@@ -42,40 +45,60 @@ class RoomJoinViewModel {
         
         do {
             // 1. APIサーバーからルーム情報を取得
+            print("🌐 [RoomJoin] ルーム情報取得開始: \(apiServerURL)/rooms/\(roomId)")
             let roomInfo = try await fetchRoomInfo()
             currentRoomInfo = roomInfo
+            print("✅ [RoomJoin] ルーム情報取得成功 roomId=\(roomInfo.roomId), address=\(roomInfo.address), port=\(String(describing: roomInfo.port)), wsPort=\(String(describing: roomInfo.wsPort))")
             
             // 2. WebTransportで接続
-            let serverEndpoint = "\(roomInfo.address):\(roomInfo.port)"
+            guard let wsPort = roomInfo.wsPort else {
+                errorMessage = "wsPort が取得できないため接続できません"
+                isConnected = false
+                isLoading = false
+                print("❌ [RoomJoin] wsPortが未設定のため接続中断")
+                return
+            }
+
+            let serverEndpoint = "\(roomInfo.address):\(wsPort)"
+            print("🚀 [RoomJoin] WebSocket接続開始 endpoint=\(serverEndpoint), roomId=\(roomId)")
             await webTransportManager.connectToRoom(endpoint: serverEndpoint, roomId: roomId)
             
             isConnected = webTransportManager.isConnected
             
             if !isConnected {
                 errorMessage = webTransportManager.connectionError
+                print("❌ [RoomJoin] 接続失敗 error=\(webTransportManager.connectionError)")
+            } else {
+                print("✅ [RoomJoin] 接続成功 endpoint=\(serverEndpoint), roomId=\(roomId)")
             }
             
         } catch {
             errorMessage = "接続に失敗しました: \(error.localizedDescription)"
             isConnected = false
+            print("❌ [RoomJoin] 例外発生: \(error)")
         }
         
         isLoading = false
+        print("ℹ️ [RoomJoin] joinRoom終了 isConnected=\(isConnected), errorMessage=\(errorMessage)")
     }
     
     /// ルームから退出
     func leaveRoom() async {
+        print("🛑 [RoomJoin] 退出開始 roomId=\(roomId)")
         await webTransportManager.disconnect()
         isConnected = false
         currentRoomInfo = nil
         errorMessage = ""
+        print("✅ [RoomJoin] 退出完了")
     }
     
     /// APIサーバーからルーム情報を取得
     private func fetchRoomInfo() async throws -> RoomInfo {
         guard let url = URL(string: "\(apiServerURL)/rooms/\(roomId)") else {
+            print("❌ [RoomJoin] 不正なURL apiServerURL=\(apiServerURL), roomId=\(roomId)")
             throw URLError(.badURL)
         }
+        print("🌐 [RoomJoin] GET \(url.absoluteString)")
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
@@ -84,30 +107,36 @@ class RoomJoinViewModel {
         let (data, response) = try await URLSession.shared.data(for: request)
         
         guard let httpResponse = response as? HTTPURLResponse else {
+            print("❌ [RoomJoin] HTTPレスポンス変換失敗")
             throw URLError(.badServerResponse)
         }
+        print("ℹ️ [RoomJoin] API応答 status=\(httpResponse.statusCode), bytes=\(data.count)")
         
         if httpResponse.statusCode == 404 {
+            print("❌ [RoomJoin] ルーム未検出 roomId=\(roomId)")
             throw NSError(domain: "RoomNotFound", code: 404, userInfo: [
                 NSLocalizedDescriptionKey: "ルームが見つかりません"
             ])
         }
         
         guard httpResponse.statusCode == 200 else {
+            print("❌ [RoomJoin] サーバーエラー status=\(httpResponse.statusCode)")
             throw NSError(domain: "HTTPError", code: httpResponse.statusCode, userInfo: [
                 NSLocalizedDescriptionKey: "サーバーエラー (HTTP \(httpResponse.statusCode))"
             ])
         }
         
         let decoder = JSONDecoder()
-        return try decoder.decode(RoomInfo.self, from: data)
+        let roomInfo = try decoder.decode(RoomInfo.self, from: data)
+        print("✅ [RoomJoin] JSONデコード成功 roomId=\(roomInfo.roomId), wsPort=\(String(describing: roomInfo.wsPort))")
+        return roomInfo
     }
 }
 
 /// ルームJOIN用のView
 struct RoomJoinView: View {
     @State private var viewModel = RoomJoinViewModel()
-    @State private var webTransportManager = WebTransportManager.shared
+    @State private var webTransportManager = WebSocketManager.shared
     
     var body: some View {
         VStack(spacing: 20) {
@@ -140,7 +169,10 @@ struct RoomJoinView: View {
                                 .font(.caption)
                                 .foregroundStyle(.secondary)
                             
-                            Text("\(roomInfo.address):\(roomInfo.port)")
+                            Text(
+                                roomInfo.wsPort.map { "\(roomInfo.address):\($0)" }
+                                    ?? "\(roomInfo.address):(wsPort未設定)"
+                            )
                                 .font(.caption2)
                                 .foregroundStyle(.secondary)
                         }
@@ -178,7 +210,7 @@ struct RoomJoinView: View {
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         
-                        TextField("https://your-server.com", text: $viewModel.apiServerURL)
+                        TextField("https://jdx5mzkles7fj6tc64smdx5rvq0ogrvr.lambda-url.ap-northeast-1.on.aws", text: $viewModel.apiServerURL)
                             .textFieldStyle(.roundedBorder)
                             .autocapitalization(.none)
                             .keyboardType(.URL)

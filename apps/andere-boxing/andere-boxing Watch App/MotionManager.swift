@@ -55,8 +55,12 @@ class MotionManager: NSObject, @unchecked Sendable {
     }
 
     func startMonitoring() {
-        guard !isMonitoring else { return }
+        guard !isMonitoring else {
+            print("⚠️ [MotionManager] 既にモニタリング中です")
+            return
+        }
 
+        print("🚀 [MotionManager] モニタリング開始")
         startTime = Date().timeIntervalSince1970
         motionHistory.removeAll()
         isMonitoring = true
@@ -67,15 +71,24 @@ class MotionManager: NSObject, @unchecked Sendable {
         }
 
         if motionManager.isDeviceMotionAvailable {
+            print("✅ [MotionManager] DeviceMotion利用可能、更新開始")
             motionManager.startDeviceMotionUpdates(to: .main) { [weak self] motion, _ in
                 self?.updateMotionData(from: motion)
             }
+        } else {
+            print("❌ [MotionManager] DeviceMotion利用不可")
         }
+        
+        print("📊 [MotionManager] isMonitoring: \(isMonitoring)")
     }
 
     func stopMonitoring() {
-        guard isMonitoring else { return }
+        guard isMonitoring else {
+            print("⚠️ [MotionManager] 既にモニタリング停止中です")
+            return
+        }
 
+        print("🛑 [MotionManager] モニタリング停止")
         motionManager.stopDeviceMotionUpdates()
         isMonitoring = false
         punchDetector.clearHistory()
@@ -84,6 +97,8 @@ class MotionManager: NSObject, @unchecked Sendable {
         if #available(watchOS 10.0, *) {
             stopExtendedRuntimeSession()
         }
+        
+        print("📊 [MotionManager] isMonitoring: \(isMonitoring)")
     }
     
     // MARK: - Extended Runtime Session
@@ -129,6 +144,16 @@ class MotionManager: NSObject, @unchecked Sendable {
 
         currentMotionData = data
         motionHistory.append(data)
+        
+        // 最初のデータ受信時にログ
+        if motionHistory.count == 1 {
+            print("✅ [MotionManager] 最初のモーションデータ受信")
+        }
+        
+        // 100件ごとにログ
+        if motionHistory.count % 100 == 0 {
+            print("📊 [MotionManager] モーションデータ: \(motionHistory.count)件")
+        }
 
         let acceleration = sqrt(
             data.accX * data.accX +
@@ -196,6 +221,9 @@ extension MotionManager: WKExtendedRuntimeSessionDelegate {
             print("エラー: \(error.localizedDescription)")
         }
         
-        stopMonitoring()
+        // Extended Runtime Sessionが無効化されても、モーション検出は継続する
+        // （フォアグラウンドでは問題なく動作する）
+        logger.info("モーション検出は継続中（フォアグラウンドモード）")
+        print("ℹ️ モーション検出は継続中（Extended Runtimeなし）")
     }
 }

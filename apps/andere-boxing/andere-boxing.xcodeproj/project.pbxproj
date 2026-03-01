@@ -368,7 +368,6 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				AFD3E2F42F52CE0200EB889A /* XCRemoteSwiftPackageReference "swift-protobuf" */,
-				AFD3E33B2F53AD8600EB889A /* XCRemoteSwiftPackageReference "Quiver" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 53FFCEBA2F3CC29C00023103 /* Products */;
@@ -1017,14 +1016,6 @@
 			requirement = {
 				kind = upToNextMajorVersion;
 				minimumVersion = 1.35.1;
-			};
-		};
-		AFD3E33B2F53AD8600EB889A /* XCRemoteSwiftPackageReference "Quiver" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/hironichu/Quiver";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 0.0.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
