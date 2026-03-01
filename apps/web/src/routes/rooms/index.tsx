@@ -22,7 +22,12 @@ export const Route = createFileRoute("/rooms/")({
         try {
           const server = await agones.allocateForRoom(roomId);
           return Response.json(
-            { roomId, address: server.address, port: server.port },
+            {
+              roomId,
+              address: server.address,
+              port: server.port,
+              wsPort: server.wsPort,
+            },
             { status: 201 },
           );
         } catch (error) {
