@@ -172,10 +172,10 @@ let punchEvent = AndereBoxing_NetworkEvent.punch(
     roomID: "room123",
     userID: "user456"
 )
-await WebTransportManager.shared.sendEvent(punchEvent)
+await WebSocketManager.shared.sendEvent(punchEvent)
 
 // または便利メソッドを使用
-await WebTransportManager.shared.sendPunchAction(
+await WebSocketManager.shared.sendPunchAction(
     roomID: "room123",
     userID: "user456"
 )
