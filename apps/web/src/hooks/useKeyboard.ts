@@ -35,23 +35,19 @@ export function useKeyboard(roomId = "") {
     let playerTwo_uuid = "";
 
     const handler = (event: andere_boxing.NetworkEvent) => {
-      // JOIN イベントで uuid を登録
-      if (event.roomAction === andere_boxing.RoomAction.ROOM_ACTION_JOIN) {
-        if (!playerOne_uuid) {
-          playerOne_uuid = event.userId;
-        } else if (!playerTwo_uuid && event.userId !== playerOne_uuid) {
-          playerTwo_uuid = event.userId;
-        }
-        return;
-      }
-
       if (event.userAction == null) return;
 
-      // キーボード入力 or uuid からプレイヤーインデックスを解決
+      // 最初にアクションを送った uuid → player 0、次 → player 1
       let playerIndex: 0 | 1 | undefined;
       if (event.userId === playerOne_uuid) {
         playerIndex = 0;
       } else if (event.userId === playerTwo_uuid) {
+        playerIndex = 1;
+      } else if (!playerOne_uuid) {
+        playerOne_uuid = event.userId;
+        playerIndex = 0;
+      } else if (!playerTwo_uuid) {
+        playerTwo_uuid = event.userId;
         playerIndex = 1;
       }
 
