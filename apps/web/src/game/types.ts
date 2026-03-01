@@ -37,3 +37,5 @@ export type GameState = {
  *   ゲームロジック側で null と同等に扱う。
  */
 export type PlayerAction = andere_boxing.UserAction | null;
+
+export type RoomActions = andere_boxing.RoomAction | null;
