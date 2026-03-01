@@ -25,6 +25,7 @@ export const Route = createFileRoute("/rooms/$roomId/")({
             roomId,
             address: server.address,
             port: server.port,
+            wsPort: server.wsPort,
           });
         } catch (error) {
           const message =

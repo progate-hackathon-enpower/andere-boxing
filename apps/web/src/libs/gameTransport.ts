@@ -46,6 +46,7 @@ class GameTransport extends EventEmitter<GameTransportEvents> {
         if (done) break;
 
         const event = andere_boxing.NetworkEvent.decode(value);
+        console.log("Received event:", JSON.stringify(event));
         this.emit("event", event);
       }
     } catch (e) {
