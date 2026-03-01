@@ -70,6 +70,11 @@ impl GameServer {
         })
     }
 
+    /// Get the broadcast sender (for sharing with WebSocket server)
+    pub fn broadcast_tx(&self) -> mpsc::Sender<Bytes> {
+        self.broadcast_tx.clone()
+    }
+
     /// Run the server, accepting connections indefinitely
     pub async fn run(&self) -> anyhow::Result<()> {
         info!("WebTransport server listening");
