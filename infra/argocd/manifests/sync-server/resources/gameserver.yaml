@@ -29,7 +29,7 @@ spec:
             eks.amazonaws.com/nodegroup: andere-boxing-public-node-group
           containers:
             - name: sync-server
-              image: 379708350366.dkr.ecr.ap-northeast-1.amazonaws.com/andere-boxing/sync-server:main
+              image: 379708350366.dkr.ecr.ap-northeast-1.amazonaws.com/andere-boxing/sync-server:4e8d871
               imagePullPolicy: Always
               env:
                 - name: CERT
