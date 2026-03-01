@@ -28,14 +28,36 @@ export function useKeyboard(roomId = "") {
   const pendingRef = useRef<[PlayerAction, PlayerAction]>([null, null]);
 
   // 受信: NetworkEvent → フレームバッファに積む
+  // JOIN 順で uuid → playerIndex (0 | 1) をマッピングする
   useEffect(() => {
     const transport = getGameTransport();
+    let playerOne_uuid = "";
+    let playerTwo_uuid = "";
+
     const handler = (event: andere_boxing.NetworkEvent) => {
-      if (event.event !== "userAction") return;
-      if (event.userId === "player-0")
-        pendingRef.current[0] = event.userAction ?? null;
-      else if (event.userId === "player-1")
-        pendingRef.current[1] = event.userAction ?? null;
+      // JOIN イベントで uuid を登録
+      if (event.roomAction === andere_boxing.RoomAction.ROOM_ACTION_JOIN) {
+        if (!playerOne_uuid) {
+          playerOne_uuid = event.userId;
+        } else if (!playerTwo_uuid && event.userId !== playerOne_uuid) {
+          playerTwo_uuid = event.userId;
+        }
+        return;
+      }
+
+      if (event.userAction == null) return;
+
+      // キーボード入力 or uuid からプレイヤーインデックスを解決
+      let playerIndex: 0 | 1 | undefined;
+      if (event.userId === playerOne_uuid) {
+        playerIndex = 0;
+      } else if (event.userId === playerTwo_uuid) {
+        playerIndex = 1;
+      }
+
+      if (playerIndex != null) {
+        pendingRef.current[playerIndex] = event.userAction;
+      }
     };
     transport.on("event", handler);
     return () => {
@@ -45,19 +67,11 @@ export function useKeyboard(roomId = "") {
 
   // 送信: キー押下 → NetworkEvent
   useEffect(() => {
-    const transport = getGameTransport();
     const onKeyDown = (e: KeyboardEvent) => {
       const binding = KEY_BINDINGS[e.key.toLowerCase()];
+
       if (!binding) return;
-      transport.emit(
-        "event",
-        andere_boxing.NetworkEvent.create({
-          roomId,
-          userId: `player-${binding.playerIndex}`,
-          timestamp: Date.now(),
-          userAction: binding.action,
-        }),
-      );
+      pendingRef.current[binding.playerIndex] = binding.action;
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
