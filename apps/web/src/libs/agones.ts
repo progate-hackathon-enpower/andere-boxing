@@ -4,9 +4,16 @@
 
 import { EksClient } from "./eks";
 
+export interface GameServerPort {
+  name: string;
+  port: number;
+}
+
 export interface GameServerInfo {
   address: string;
   port: number;
+  wsPort: number | null;
+  ports: GameServerPort[];
 }
 
 /** EC2 ホスト名 (ec2-x-x-x-x.*.amazonaws.com) を https://ip-x-x-x-x.qwet に変換 */
@@ -54,10 +61,7 @@ export class AgonesClient {
 
     const data = await response.json();
     console.log("allocateForRoom response:", JSON.stringify(data, null, 2));
-    return {
-      address: toQwetAddress(data.status?.address ?? ""),
-      port: data.status?.ports?.[0]?.port,
-    };
+    return parseGameServerInfo(data.status);
   }
 
   /**
@@ -81,9 +85,25 @@ export class AgonesClient {
 
     if (!allocated) return null;
 
-    return {
-      address: toQwetAddress(allocated.status?.address ?? ""),
-      port: allocated.status?.ports?.[0]?.port,
-    };
+    return parseGameServerInfo(allocated.status);
   }
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function parseGameServerInfo(status: any): GameServerInfo {
+  const rawPorts: GameServerPort[] = (status?.ports ?? []).map(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (p: any) => ({ name: p.name as string, port: p.port as number }),
+  );
+
+  const defaultPort =
+    rawPorts.find((p) => p.name === "default")?.port ?? rawPorts[0]?.port;
+  const wsPort = rawPorts.find((p) => p.name === "ws")?.port ?? null;
+
+  return {
+    address: toQwetAddress(status?.address ?? ""),
+    port: defaultPort,
+    wsPort,
+    ports: rawPorts,
+  };
 }
