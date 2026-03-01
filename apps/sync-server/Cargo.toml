@@ -16,5 +16,5 @@ futures = "0.3"
 agones = "1.43"
 pem = "3"
 tokio-tungstenite = "0.24"
-tokio-rustls = "0.26"
+tokio-rustls = { version = "0.26", default-features = false, features = ["ring"] }
 rustls-pemfile = "2"

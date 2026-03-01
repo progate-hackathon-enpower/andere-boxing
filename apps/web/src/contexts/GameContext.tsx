@@ -12,6 +12,8 @@ interface GameContextType {
   resetKey: number;
   reset: () => void;
   gameStateRef: React.RefObject<GameState | null>;
+  /** ルームに接続中のプレイヤー数（useRoomConnection が更新する） */
+  playerCountRef: React.RefObject<number>;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -19,6 +21,7 @@ const GameContext = createContext<GameContextType | undefined>(undefined);
 export function GameProvider({ children }: { children: ReactNode }) {
   const [resetKey, setResetKey] = useState(0);
   const gameStateRef = useRef<GameState | null>(null);
+  const playerCountRef = useRef(0);
 
   const reset = useCallback(() => {
     gameStateRef.current = null;
@@ -26,7 +29,9 @@ export function GameProvider({ children }: { children: ReactNode }) {
   }, []);
 
   return (
-    <GameContext.Provider value={{ resetKey, reset, gameStateRef }}>
+    <GameContext.Provider
+      value={{ resetKey, reset, gameStateRef, playerCountRef }}
+    >
       {children}
     </GameContext.Provider>
   );
