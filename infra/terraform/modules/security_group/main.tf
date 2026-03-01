@@ -86,6 +86,14 @@ resource "aws_security_group" "eks_public_node" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description = "Allow application ports from internet (TCP)"
+    from_port   = var.public_node_port_from
+    to_port     = var.public_node_port_to
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
   egress {
     from_port   = 0
     to_port     = 0
