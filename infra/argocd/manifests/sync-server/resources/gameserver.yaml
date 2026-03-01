@@ -19,6 +19,10 @@ spec:
           portPolicy: Dynamic
           containerPort: 4433
           protocol: UDP
+        - name: ws
+          portPolicy: Dynamic
+          containerPort: 4434
+          protocol: TCP
       template:
         spec:
           nodeSelector:
