@@ -30,6 +30,9 @@
 ## インフラ
 ![image](https://ptera-publish.topaz.dev/project/01KJK4P1EPMFYS250P28CE57FG.png)
 
+`構成図`
+![image](https://ptera-publish.topaz.dev/project/01KJKJXVQTS34PDDD5PTA31AEF.png)
+
 ## （ML）
 AppleWatchで「時間軸、ユーザー加速度、回転速度」の情報を持つCSVから、CoreMLでモデルを作成。ユーザーがパンチしたり、パンチに似た他の動作をしたりした時、動作を識別し、適切な操作を可能にし...ようとしていました。（後述）
 
