@@ -11,6 +11,8 @@ import type { AnimState } from "../../game/types";
 extend({ AnimatedSprite });
 
 const SPRITE_SCALE = 1.5;
+/** フェードの速度（1フレームあたりの alpha 変化量） */
+const FADE_SPEED = 0.03;
 
 // Fighter と同じ速度設定
 const ANIM_SPEED_DIVISOR: Record<AnimState, number> = {
@@ -28,6 +30,8 @@ function getAnimSpeed(animState: AnimState): number {
 type Props = {
   side: "left" | "right";
   getAnimState: () => AnimState;
+  /** スタンドを表示すべきかどうかを返すコールバック（useTick 内から呼ばれる） */
+  getVisible: () => boolean;
 };
 
 const STAND_CHAR: Record<"left" | "right", StandCharName> = {
@@ -35,7 +39,7 @@ const STAND_CHAR: Record<"left" | "right", StandCharName> = {
   right: "the-world",
 };
 
-export function Stand({ side, getAnimState }: Props) {
+export function Stand({ side, getAnimState, getVisible }: Props) {
   const [allTextures, setAllTextures] = useState<Record<
     AnimState,
     Texture[]
@@ -61,13 +65,27 @@ export function Stand({ side, getAnimState }: Props) {
 
   const handleRef = useCallback((node: AnimatedSprite | null) => {
     spriteRef.current = node;
-    if (node) node.gotoAndPlay(0);
+    if (node) {
+      node.alpha = 0;
+      node.gotoAndPlay(0);
+    }
   }, []);
 
   useTick(() => {
     const sprite = spriteRef.current;
     if (!sprite || !allTextures) return;
 
+    // フェードイン/アウト
+    const targetAlpha = getVisible() ? 1 : 0;
+    if (sprite.alpha !== targetAlpha) {
+      if (targetAlpha > sprite.alpha) {
+        sprite.alpha = Math.min(1, sprite.alpha + FADE_SPEED);
+      } else {
+        sprite.alpha = Math.max(0, sprite.alpha - FADE_SPEED);
+      }
+    }
+
+    // アニメーション切り替え
     const animState = getAnimState();
     if (animState === prevAnimState.current) return;
     prevAnimState.current = animState;
@@ -127,6 +145,7 @@ export function Stand({ side, getAnimState }: Props) {
       x={x}
       y={y}
       scale={{ x: scaleX, y: SPRITE_SCALE }}
+      alpha={0}
     />
   );
 }
